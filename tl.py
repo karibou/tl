@@ -13,7 +13,7 @@
 
 import re, sys, time
 
-LogFile='~/.local/share/gtimelog/timelog.txt'
+LogFile='/home/caribou/.local/share/gtimelog/timelog.txt'
 
 Categories = {
     'ua': 'L3 / L3 support',
