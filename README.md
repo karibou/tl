@@ -10,6 +10,8 @@ gtimelog.
 ```
     $ ./tl.py ?
     Categories :['know', 'meet', 'pers', 'skill', 'team', 'ua', 'ubu', 'up']
+```
+
 * ua: L3 / L3 support
 * up: Upstream
 * ubu: Upstream Ubuntu
