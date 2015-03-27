@@ -20,7 +20,15 @@ gtimelog.
 * skill: Skills building
 * know: Knowledge transfer
 * team: Team support
-* 
 
 ### New category & task
     $ ./tl.py category : task
+
+### Use existing category
+    $ tl ubu
+    1) PlusOne - Fix deja-dup ftbs
+    2) kdump-tools with runlevel_s
+    3) lp1415880 - bcmwl-kernel source
+    4) sosreport juju plugin enhancement
+    Select task (0 to exit): 
+
