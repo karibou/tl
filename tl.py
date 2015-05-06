@@ -23,7 +23,8 @@ Categories = {
     'pers': 'Personal management',
     'skill': 'Skills building',
     'know': 'Knowledge transfer',
-    'team': 'Team support'
+    'team': 'Team support',
+    'comm': 'Community Involvment',
     }
 
 
