@@ -23,25 +23,25 @@ class TlTest(unittest.TestCase):
         shutil.rmtree(letest.workdir)
 
     def test_new(self):
-        '''calling tl with only 'new' argument'''
+        '''testing only 'new' argument'''
         tl.log_activity('new', 'Arrived')
         line = self._get_last_log_line().strip()
         self.assertTrue(line.endswith('Arrived'))
 
     def test_ua_entry(self):
-        '''calling tl with a UA entry'''
+        '''testing a UA entry'''
         tl.log_activity('ua', 'This is one entry')
         line = self._get_last_log_line().strip()
         self.assertTrue(line.endswith('L3 / L3 support : This is one entry'))
 
     def test_not_logged(self):
-        '''calling tl with argument with two asterix'''
+        '''testing argument with two asterix'''
         tl.log_activity('lunch**')
         line = self._get_last_log_line().strip()
         self.assertTrue(line.endswith('lunch**'))
 
     def test_absolutely_not_logged(self):
-        '''calling tl with argument with three asterix'''
+        '''testing argument with three asterix'''
         tl.log_activity('lunch***')
         line = self._get_last_log_line().strip()
         self.assertTrue(line.endswith('lunch***'))
@@ -53,7 +53,7 @@ class TlTest(unittest.TestCase):
                                           "'ubu', 'up']"))
 
     def test_select_tasks_out_of_range(self):
-        '''calling tl with category only and giving out of range answer'''
+        '''testing category only and giving out of range answer'''
         with patch('builtins.input', return_value='3'):
             tl.select_tasks('ua')
             output = sys.stdout.getvalue().strip()
@@ -61,7 +61,7 @@ class TlTest(unittest.TestCase):
             self.assertEqual(tl.select_tasks('ua'), (None, None))
 
     def test_select_tasks_select_0(self):
-        '''calling tl with category only and answering 0'''
+        '''testing category only and answering 0'''
         with patch('builtins.input', return_value='0'):
             tl.select_tasks('ua')
             output = sys.stdout.getvalue().strip()
@@ -69,7 +69,7 @@ class TlTest(unittest.TestCase):
             self.assertEqual(tl.select_tasks('ua'), (None, None))
 
     def test_select_tasks_select_nothing(self):
-        '''calling tl with category only and answering nothing'''
+        '''testing category only and answering nothing'''
         with patch('builtins.input', return_value=''):
             tl.select_tasks('ua')
             output = sys.stdout.getvalue().strip()
