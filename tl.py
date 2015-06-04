@@ -13,7 +13,7 @@
 
 import re, sys, time
 
-LogFile='/home/caribou/.local/share/gtimelog/timelog.txt'
+LogFile = '/home/caribou/.local/share/gtimelog/timelog.txt'
 
 Categories = {
     'ua': 'L3 / L3 support',
@@ -27,7 +27,8 @@ Categories = {
     'comm': 'Community Involvment',
     }
 
-ListLimit=10
+ListLimit = 10
+
 
 def show_help():
     return("Categories : {}".format(sorted(list(Categories.keys()))))
@@ -46,13 +47,13 @@ def select_tasks(category):
     # Get the last items first
     cases.reverse()
     for I in cases:
-        if ( cases.index(I) + 1) % ListLimit:
+        if (cases.index(I) + 1) % ListLimit:
             print("{}) {}".format(cases.index(I) + 1, I))
         else:
             # account for modulo = 0 item
             print("{}) {}".format(cases.index(I) + 1, I))
             try:
-                mytask = input("Select task (0 to exit, <return> to continue): ")
+                mytask = input("Select task (0 to exit,<CR> to continue): ")
                 if mytask == '0':
                         return(None, None)
                 if mytask == '' or not mytask.isdecimal():
@@ -73,7 +74,6 @@ def select_tasks(category):
     else:
         print("Invalid task number")
         return(None, None)
-
 
 
 def log_activity(category, task=None):
