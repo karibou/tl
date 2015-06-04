@@ -52,22 +52,34 @@ def select_tasks(category):
         else:
             # account for modulo = 0 item
             print("{}) {}".format(cases.index(I) + 1, I))
-            try:
-                mytask = input("Select task (0 to exit,<CR> to continue): ")
-                if mytask == '0':
-                        return(None, None)
-                if mytask == '' or not mytask.isdecimal():
-                    if cases.index(I) < ListLimit:
-                        continue
+            if cases.index(I) + 1 < len(cases):
+                try:
+                    mytask = input("Select task (0 to exit,<CR> to continue): ")
+                    if mytask == '0':
+                            return(None, None)
+                    if mytask == '' or not mytask.isdecimal():
+                        if cases.index(I) < ListLimit:
+                            continue
+                        else:
+                            return(None, None)
                     else:
-                        return(None, None)
-                else:
-                    mytask = int(mytask)
-                    break
+                        mytask = int(mytask)
+                        break
 
-            except KeyboardInterrupt:
-                print("Terminated\n")
-                sys.exit(1)
+                except KeyboardInterrupt:
+                    print("Terminated\n")
+                    sys.exit(1)
+
+    try:
+        mytask = input("Select task (0 or <CR> to exit): ")
+        if mytask == '0' or mytask == '' or not mytask.isdecimal():
+                return(None, None)
+        else:
+            mytask = int(mytask)
+
+    except KeyboardInterrupt:
+        print("Terminated\n")
+        sys.exit(1)
 
     if mytask > 0 and mytask <= len(cases):
         return(category, cases[mytask - 1])
