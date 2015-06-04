@@ -12,6 +12,7 @@ gtimelog.
     $ ./tl.py ?
     Categories :['know', 'meet', 'pers', 'skill', 'team', 'ua', 'ubu', 'up']
 
+* comm: Community Involvment
 * ua: L3 / L3 support
 * up: Upstream
 * ubu: Upstream Ubuntu
@@ -32,3 +33,5 @@ gtimelog.
     4) sosreport juju plugin enhancement
     Select task (0 to exit): 
 
+The list is limited to 10 items, listed in reverse. Hit <CR> to continue
+to scroll the list for more entries
