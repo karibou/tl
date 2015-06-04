@@ -57,24 +57,21 @@ class TlTest(unittest.TestCase):
         with patch('builtins.input', return_value='3'):
             tl.select_tasks('ua')
             output = sys.stdout.getvalue().strip()
-            self.assertEqual(output, '1) SF7-openafs\n2) SF801-kdump\nInvalid task number')
-            self.assertEqual(tl.select_tasks('ua'), (None, None))
+            self.assertEqual(output, '1) SF801-kdump\n2) SF7-openafs\nInvalid task number')
 
     def test_select_tasks_select_0(self):
         '''testing category only and answering 0'''
         with patch('builtins.input', return_value='0'):
-            tl.select_tasks('ua')
-            output = sys.stdout.getvalue().strip()
-            self.assertEqual(output, '1) SF7-openafs\n2) SF801-kdump')
             self.assertEqual(tl.select_tasks('ua'), (None, None))
+            output = sys.stdout.getvalue().strip()
+            self.assertEqual(output, '1) SF801-kdump\n2) SF7-openafs')
 
     def test_select_tasks_select_nothing(self):
         '''testing category only and answering nothing'''
         with patch('builtins.input', return_value=''):
-            tl.select_tasks('ua')
-            output = sys.stdout.getvalue().strip()
-            self.assertEqual(output, '1) SF7-openafs\n2) SF801-kdump')
             self.assertEqual(tl.select_tasks('ua'), (None, None))
+            output = sys.stdout.getvalue().strip()
+            self.assertEqual(output, '1) SF801-kdump\n2) SF7-openafs')
 
     def test_select_tasks_select_valid(self):
         '''calling tl with category only and selecting first task'''
