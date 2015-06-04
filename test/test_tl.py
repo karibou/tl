@@ -47,8 +47,8 @@ class TlTest(unittest.TestCase):
         self.assertTrue(line.endswith('lunch***'))
 
     def test_help(self):
-        '''calling tl with ? to get help '''
-        self.assertEqual(tl.show_help(), ("Categories : ['know', 'meet', "
+        '''testing ? to get help '''
+        self.assertEqual(tl.show_help(), ("Categories : ['comm', 'know', 'meet', "
                                           "'pers', 'skill', 'team', 'ua', "
                                           "'ubu', 'up']"))
 
