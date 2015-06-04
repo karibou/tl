@@ -27,6 +27,7 @@ Categories = {
     'comm': 'Community Involvment',
     }
 
+ListLimit=10
 
 def show_help():
     return("Categories : {}".format(sorted(list(Categories.keys()))))
@@ -42,24 +43,37 @@ def select_tasks(category):
                 case = regex.split(line)[-1].strip()
                 if case.lstrip(": ") not in cases:
                     cases.append(case.lstrip(": "))
+    # Get the last items first
+    cases.reverse()
     for I in cases:
-        print("{}) {}".format(cases.index(I) + 1, I))
-    try:
-        mytask = input("Select task (0 to exit): ")
-        if mytask == '' or mytask == '0' or not mytask.isdecimal():
-            return(None, None)
+        if ( cases.index(I) + 1) % ListLimit:
+            print("{}) {}".format(cases.index(I) + 1, I))
         else:
-            mytask = int(mytask)
+            # account for modulo = 0 item
+            print("{}) {}".format(cases.index(I) + 1, I))
+            try:
+                mytask = input("Select task (0 to exit, <return> to continue): ")
+                if mytask == '0':
+                        return(None, None)
+                if mytask == '' or not mytask.isdecimal():
+                    if cases.index(I) < ListLimit:
+                        continue
+                    else:
+                        return(None, None)
+                else:
+                    mytask = int(mytask)
+                    break
 
-        if mytask > 0 and mytask <= len(cases):
-            return(category, cases[mytask - 1])
-        else:
-            print("Invalid task number")
-            return(None, None)
+            except KeyboardInterrupt:
+                print("Terminated\n")
+                sys.exit(1)
 
-    except KeyboardInterrupt:
-        print("Terminated\n")
-        sys.exit(1)
+    if mytask > 0 and mytask <= len(cases):
+        return(category, cases[mytask - 1])
+    else:
+        print("Invalid task number")
+        return(None, None)
+
 
 
 def log_activity(category, task=None):
