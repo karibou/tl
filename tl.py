@@ -70,16 +70,17 @@ def select_tasks(category):
                     print("Terminated\n")
                     sys.exit(1)
 
-    try:
-        mytask = input("Select task (0 or <CR> to exit): ")
-        if mytask == '0' or mytask == '' or not mytask.isdecimal():
-                return(None, None)
-        else:
-            mytask = int(mytask)
-
-    except KeyboardInterrupt:
-        print("Terminated\n")
-        sys.exit(1)
+    if not mytask:
+        try:
+            mytask = input("Select task (0 or <CR> to exit): ")
+            if mytask == '0' or mytask == '' or not mytask.isdecimal():
+                    return(None, None)
+            else:
+                mytask = int(mytask)
+    
+        except KeyboardInterrupt:
+            print("Terminated\n")
+            sys.exit(1)
 
     if mytask > 0 and mytask <= len(cases):
         return(category, cases[mytask - 1])
