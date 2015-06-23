@@ -58,10 +58,7 @@ def select_tasks(category):
                     if mytask == '0':
                             return(None, None)
                     if mytask == '' or not mytask.isdecimal():
-                        if cases.index(I) < ListLimit:
-                            continue
-                        else:
-                            return(None, None)
+                        continue
                     else:
                         mytask = int(mytask)
                         break
