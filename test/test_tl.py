@@ -38,6 +38,28 @@ class TlTest(unittest.TestCase):
             timelog.write("2015-03-18 11:17: Internal meetings : sabdfl\n")
             timelog.write("2015-03-18 11:18: Internal meetings : kernel\n")
             timelog.write("2015-03-18 11:19: Internal meetings : mom\n")
+            timelog.write("2015-03-19 11:10: Upstream : maas\n")
+            timelog.write("2015-03-19 11:11: Upstream : juju\n")
+            timelog.write("2015-03-19 11:12: Upstream : supp\n")
+            timelog.write("2015-03-19 11:13: Upstream : team\n")
+            timelog.write("2015-03-19 11:14: Upstream : mgr\n")
+            timelog.write("2015-03-19 11:15: Upstream : foundation\n")
+            timelog.write("2015-03-19 11:16: Upstream : server\n")
+            timelog.write("2015-03-19 11:17: Upstream : sabdfl\n")
+            timelog.write("2015-03-19 11:18: Upstream : kernel\n")
+            timelog.write("2015-03-19 11:19: Upstream : mom\n")
+            timelog.write("2015-03-19 11:20: Upstream : rsyslog\n")
+            timelog.write("2015-03-19 11:21: Upstream : sleep\n")
+            timelog.write("2015-03-19 11:22: Upstream : binutils\n")
+            timelog.write("2015-03-19 11:23: Upstream : awk\n")
+            timelog.write("2015-03-19 11:24: Upstream : grep\n")
+            timelog.write("2015-03-19 11:25: Upstream : make\n")
+            timelog.write("2015-03-19 11:26: Upstream : autotools\n")
+            timelog.write("2015-03-19 11:27: Upstream : autoconf\n")
+            timelog.write("2015-03-19 11:28: Upstream : ifenslave\n")
+            timelog.write("2015-03-19 11:29: Upstream : true\n")
+            timelog.write("2015-03-19 11:30: Upstream : false\n")
+            timelog.write("2015-03-19 11:31: Upstream : what\n")
 
     @classmethod
     def tearDownClass(letest):
@@ -136,6 +158,27 @@ class TlTest(unittest.TestCase):
             output = sys.stdout.getvalue().strip()
             self.assertEqual(output, '1) pascal\n2) basic\n3) erlang\n4) nodejs\n5) java\n6) go\n7) perl\n8) apl\n9) c\n10) ruby')
 
+    def test_category_with_31_items(self):
+        '''testing category with 31 entries and selecting first task'''
+        with patch('builtins.input', return_value='1'):
+            self.assertEqual(tl.select_tasks('up'), ('up', 'what'))
+            output = sys.stdout.getvalue().strip()
+            self.assertEqual(output, '1) what\n2) false\n3) true\n4) ifenslave\n5) autoconf\n6) autotools\n7) make\n8) grep\n9) awk\n10) binutils')
+
+    def test_category_with_31_items_task_11(self):
+        '''testing category with 31 entries and selecting eleventh task'''
+        with patch('builtins.input', return_value='11'):
+            self.assertEqual(tl.select_tasks('up'), ('up', 'sleep'))
+            output = sys.stdout.getvalue().strip()
+            self.assertEqual(output, '1) what\n2) false\n3) true\n4) ifenslave\n5) autoconf\n6) autotools\n7) make\n8) grep\n9) awk\n10) binutils')
+
+    def test_category_with_31_items_task_21(self):
+        '''testing category with 31 entries and selecting twenty-first task'''
+        with patch('builtins.input', return_value='21'):
+            self.assertEqual(tl.select_tasks('up'), ('up', 'juju'))
+            output = sys.stdout.getvalue().strip()
+            # self.assertEqual(output, '1) what\n2) false\n3) true\n4) ifenslave\n5) autoconf\n6) autotools\n7) make\n8) grep\n9) awk\n10) binutils\n11) sleep\n12) rsyslog\n13) mom\n14) kernel\n15) sabdfl\n16) server\n17) foundation\n18) mgr\n19) team\n20) supp\n21) juju\n22) maas\n)')
+            self.assertEqual(output, '1) what\n2) false\n3) true\n4) ifenslave\n5) autoconf\n6) autotools\n7) make\n8) grep\n9) awk\n10) binutils')
 
     def _get_last_log_line(self):
         with open(tl.LogFile, 'r') as timelog:
