@@ -12,8 +12,9 @@
 # the full text of the license.
 
 import re, sys, time
+from os.path import expanduser
 
-LogFile = '/home/caribou/.local/share/gtimelog/timelog.txt'
+LogFile = '%s/.local/share/gtimelog/timelog.txt' % expanduser("~")
 
 Categories = {
     'ua': 'L3 / L3 support',
