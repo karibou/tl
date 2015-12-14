@@ -2,7 +2,7 @@
 # Add a new task to the gtimelog log file.
 # Propose a list of task if only the category is supplied
 #
-# Copyright (c) 2006 Canonical Ltd.
+# Copyright (c) 2015 Canonical Ltd.
 # Author: Louis Bouchard <louis.bouchard@ubuntu.com>
 #
 # This program is free software; you can redistribute it and/or modify it
