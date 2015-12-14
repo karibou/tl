@@ -74,7 +74,7 @@ def select_tasks(category):
                     return(None, None)
             else:
                 mytask = int(mytask)
-    
+
         except KeyboardInterrupt:
             print("Terminated\n")
             sys.exit(1)
