@@ -40,7 +40,20 @@ ListLimit = 10
 
 
 def show_help():
-    return("Categories : {}".format(sorted(list(Categories.keys()))))
+    try:
+        # python3-prettytable will be used if installed
+        import prettytable
+        categories = prettytable.PrettyTable(["Key","Description"],
+                                             sortby = "Key",padding_width = 1)
+        categories.align["Key"] = "l"
+        categories.align["Description"] = "l"
+        categories.padding_width = 1
+        for keys,description in Categories.items():
+            categories.add_row([keys, description])
+        print(categories)
+    except:
+        for keys,description in Categories.items():
+            print("%s : %s" % (keys,description))
 
 
 def select_tasks(category):
@@ -121,7 +134,7 @@ if __name__ == '__main__':
 
         if len(sys.argv) == 2:
             if sys.argv[1] == '?':
-                print("{}".format(show_help()))
+                show_help()
                 sys.exit(0)
             elif sys.argv[1] == 'new':
                 log_activity('new', 'Arrived')
