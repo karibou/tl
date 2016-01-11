@@ -18,13 +18,21 @@ LogFile = '%s/.local/share/gtimelog/timelog.txt' % expanduser("~")
 
 Categories = {
     'ua': 'L3 / L3 support',
-    'up': 'Upstream',
-    'ubu': 'Upstream Ubuntu',
-    'meet': 'Internal meetings',
+    'lp': 'Launchpad & Public',
+    'train': 'Mentoring / Edu / Training',
+    'meet': 'Meetings',
+    'seg' : 'SEG related activities',
+    'charm' : 'Charm Devel',
+    'doc' : 'Documentation / KB creation',
+    'kb' : 'Knowledge base Work',
+    'z' : 'Mainframe related',
+    'ib' : 'Mellanox related',
+    'svvp' : 'SVVP/Virtio dev',
+    'qe' : 'QE',
+    'fan' : 'Fan development',
+    'is' : 'IS bug work',
     'pers': 'Personal management',
     'skill': 'Skills building',
-    'know': 'Knowledge transfer',
-    'team': 'Team support',
     'comm': 'Community Involvment',
     }
 
