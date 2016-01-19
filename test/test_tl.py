@@ -103,26 +103,26 @@ class TlTest(unittest.TestCase):
         '''testing ? to get help when prettytable is installed'''
         tl.show_help()
         output = sys.stdout.getvalue().strip()
-        self.assertEqual(output, """+-------+-----------------------------+
-| Key   | Description                 |
-+-------+-----------------------------+
-| charm | Charm Devel                 |
-| comm  | Community Involvment        |
-| doc   | Documentation / KB creation |
-| fan   | Fan development             |
-| ib    | Mellanox related            |
-| is    | IS bug work                 |
-| kb    | Knowledge base Work         |
-| lp    | Launchpad & Public          |
-| meet  | Meetings                    |
-| pers  | Personal management         |
-| qe    | QE                          |
-| seg   | SEG related activities      |
-| svvp  | SVVP/Virtio dev             |
-| train | Mentoring / Edu / Training  |
-| ua    | L3 / L3 support             |
-| z     | Mainframe related           |
-+-------+-----------------------------+""")
+        self.assertEqual(output, """+-------+----------------------------+
+| Key   | Description                |
++-------+----------------------------+
+| charm | Charm Devel                |
+| comm  | Community Involvment       |
+| doc   | Documentation              |
+| fan   | Fan development            |
+| ib    | Mellanox related           |
+| is    | IS bug work                |
+| kb    | Knowledge base Work        |
+| lp    | Launchpad & Public         |
+| meet  | Meetings                   |
+| pers  | Personal management        |
+| qe    | QE                         |
+| seg   | SEG related activities     |
+| svvp  | SVVP/Virtio dev            |
+| train | Mentoring / Edu / Training |
+| ua    | L3 / L3 support            |
+| z     | Mainframe related          |
++-------+----------------------------+""")
 
     def test_select_tasks_out_of_range(self):
         '''testing category only and giving out of range answer'''
