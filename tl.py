@@ -23,7 +23,7 @@ Categories = {
     'meet': 'Meetings',
     'seg' : 'SEG related activities',
     'charm' : 'Charm Devel',
-    'doc' : 'Documentation / KB creation',
+    'doc' : 'Documentation',
     'kb' : 'Knowledge base Work',
     'z' : 'Mainframe related',
     'ib' : 'Mellanox related',
