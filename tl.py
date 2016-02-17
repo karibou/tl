@@ -11,7 +11,7 @@
 # option) any later version.  See http://www.gnu.org/copyleft/gpl.html for
 # the full text of the license.
 
-import re, sys, time
+import argparse, re, sys, time
 from os.path import expanduser
 
 LogFile = '%s/.local/share/gtimelog/timelog.txt' % expanduser("~")
@@ -127,27 +127,22 @@ def log_activity(category, task=None):
     return(0)
 
 if __name__ == '__main__':
-    try:
-        if len(sys.argv) == 1:
-            raise ValueError
+    parser = argparse.ArgumentParser()
+    parser.add_argument('task', nargs='*', help='category | category : task title')
+    parser.add_argument('-c', '--list-categories', help='list available task categories', action='store_true')
+    parser.add_argument('--list-tasks', nargs=1, metavar='CATEGORY', help='list available tasks for a given category')
+    parser.add_argument('-r', '--raw', help='produce raw output (without pretty formatting)', action='store_true')
+    args = parser.parse_args()
 
-        if len(sys.argv) == 2:
-            if sys.argv[1] == '?':
+    if args.task:
+        if len(args.task) == 1:
+            if args.task[0] == '?':
                 show_help()
                 sys.exit(0)
-            elif sys.argv[1] == 'new':
-                log_activity('new', 'Arrived')
-            elif sys.argv[1] in Categories.keys():
-                (category, task) = select_tasks(sys.argv[1])
-                if category is not None:
+            elif args.task[0] in Categories:
+                (category, task) = select_tasks(args.task[0])
+                if category:
                     log_activity(category, task)
-            else:
-                log_activity(sys.argv[1])
-            sys.exit(0)
+            log_activity(args.task)
         else:
-            log_activity(sys.argv[1], " ".join(sys.argv[3:]))
-        sys.exit(0)
-
-    except ValueError:
-        print("Missing Argument")
-        sys.exit(1)
+            log_activity(args.task[0], " ".join(args.task[2:]))
