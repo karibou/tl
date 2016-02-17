@@ -38,6 +38,15 @@ Categories = {
 ListLimit = 10
 
 
+def print_categories():
+    for k in sorted(Categories):
+        print(k)
+
+
+def print_tasks(category):
+    print("\n".join(get_tasks(category)))
+
+
 def show_help():
     try:
         # python3-prettytable will be used if installed
@@ -55,9 +64,8 @@ def show_help():
             print("%s : %s" % (keys,description))
 
 
-def select_tasks(category):
+def get_tasks(category):
     cases = []
-    mytask = 0
     regex = re.compile(r'{}'.format(Categories[category]))
     with open(LogFile, 'r') as timelog:
         for line in timelog:
@@ -67,6 +75,12 @@ def select_tasks(category):
                     cases.append(case.lstrip(": "))
     # Get the last items first
     cases.reverse()
+    return cases
+
+
+def select_tasks(category):
+    cases = get_tasks(category)
+    mytask = 0
     for I in cases:
         if (cases.index(I) + 1) % ListLimit:
             print("{}) {}".format(cases.index(I) + 1, I))
@@ -130,9 +144,20 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('task', nargs='*', help='category | category : task title')
     parser.add_argument('-c', '--list-categories', help='list available task categories', action='store_true')
-    parser.add_argument('--list-tasks', nargs=1, metavar='CATEGORY', help='list available tasks for a given category')
+    parser.add_argument('-t', '--list-tasks', nargs=1, metavar='CATEGORY', help='list available tasks for a given category')
     parser.add_argument('-r', '--raw', help='produce raw output (without pretty formatting)', action='store_true')
     args = parser.parse_args()
+
+    if args.list_categories:
+        if args.raw:
+            print_categories()
+        else:
+            show_help()
+        sys.exit(0)
+
+    if args.list_tasks:
+        print_tasks(args.list_tasks[0])
+        sys.exit(0)
 
     if args.task:
         if len(args.task) == 1:
@@ -143,6 +168,7 @@ if __name__ == '__main__':
                 (category, task) = select_tasks(args.task[0])
                 if category:
                     log_activity(category, task)
-            log_activity(args.task)
+            else:
+                log_activity(args.task)
         else:
             log_activity(args.task[0], " ".join(args.task[2:]))
