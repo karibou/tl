@@ -173,7 +173,7 @@ if __name__ == '__main__':
                 if category:
                     log_activity(category, task)
             else:
-                log_activity(args.task)
+                log_activity(args.task[0])
         else:
             log_activity(args.task[0], " ".join(args.task[2:]))
     else:
