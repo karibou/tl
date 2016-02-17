@@ -176,3 +176,5 @@ if __name__ == '__main__':
                 log_activity(args.task)
         else:
             log_activity(args.task[0], " ".join(args.task[2:]))
+    else:
+        parser.print_help()
