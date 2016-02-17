@@ -1,0 +1,61 @@
+# This should handle the following cases:
+# * tl.py <options>         - completes available options
+# * tl.py <TAB>             - completes category name
+# * tl.py category <TAB>    - completes colon (:)
+# * tl.py category : <TAB>  - completes with tasks list in a given category
+
+TL=tl.py
+
+_print_categories()
+{
+    $TL -c -r
+}
+
+_print_tasks()
+{
+    $TL -r -t $1
+}
+
+_timelog()
+{
+    local cur prev opts categories
+    COMPREPLY=()
+    curr="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+    opts="-r -c --list-categories -t --list-tasks new"
+    categories=$(_print_categories)
+
+    case "${prev}" in
+        -t)
+            COMPREPLY=( $(compgen -W "${categories}" -- ${curr}) )
+            ;;
+        --list-tasks)
+            COMPREPLY=( $(compgen -W "${categories}" -- ${curr}) )
+            ;;
+        -c)
+            COMPREPLY=( $(compgen -W "-r" -- ${curr}) )
+            ;;
+        --list-categories)
+            COMPREPLY=( $(compgen -W "-r" -- ${curr}) )
+            ;;
+        :)
+            local category="${COMP_WORDS[COMP_CWORD-2]}"
+            local tasks=$(_print_tasks $category)
+            tasks="${tasks//\\ /___}"
+            for iter in ${tasks}; do
+                if [[ $iter =~ ^$curr ]]; then
+                    COMPREPLY+=( "${iter//___/ }" )
+                fi
+            done
+            ;;
+        *)
+            if [[ "${categories}" = *"${prev}"* ]]; then
+                COMPREPLY=( $(compgen -W ":" -- ${curr}) )
+                return 0
+            fi
+            COMPREPLY=( $(compgen -W "${categories} ${opts}" -- ${curr}) )
+            ;;
+    esac
+}
+
+complete -F _timelog $TL

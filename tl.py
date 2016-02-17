@@ -43,8 +43,12 @@ def print_categories():
         print(k)
 
 
-def print_tasks(category):
-    print("\n".join(get_tasks(category)))
+def print_tasks(category, **kwargs):
+    tasks = get_tasks(category)
+    if "escape" in kwargs and kwargs["escape"]:
+        new_tasks = [t.replace(" ", "\\ ") for t in tasks]
+        tasks = new_tasks
+    print("\n".join(tasks))
 
 
 def show_help():
@@ -156,7 +160,7 @@ if __name__ == '__main__':
         sys.exit(0)
 
     if args.list_tasks:
-        print_tasks(args.list_tasks[0])
+        print_tasks(args.list_tasks[0], escape=args.raw)
         sys.exit(0)
 
     if args.task:
