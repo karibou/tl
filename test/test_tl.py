@@ -283,6 +283,61 @@ Invalid task number""")
 9) awk
 10) binutils""")
 
+    def test_raw_categories(self):
+        tl.print_categories()
+        output = sys.stdout.getvalue().strip()
+        self.assertEqual(output, """charm
+comm
+doc
+fan
+ib
+is
+kb
+lp
+meet
+pers
+qe
+seg
+svvp
+train
+ua
+z""")
+
+    def test_print_tasks_meet(self):
+        tl.print_tasks("meet")
+        output = sys.stdout.getvalue().strip()
+        self.assertEqual(output, """mom
+kernel
+sabdfl
+server
+foundation
+mgr
+team
+supp
+juju
+maas""")
+
+    def test_print_tasks_ua(self):
+        tl.print_tasks("ua")
+        output = sys.stdout.getvalue().strip()
+        self.assertEqual(output, """SF801-kdump
+SF7-openafs""")
+
+    def test_print_tasks_train(self):
+        tl.print_tasks("train")
+        output = sys.stdout.getvalue().strip()
+        self.assertEqual(output, """pascal
+basic
+erlang
+nodejs
+java
+go
+perl
+apl
+c
+ruby
+python""")
+
     def _get_last_log_line(self):
         with open(tl.LogFile, 'r') as timelog:
             for line in timelog:

@@ -11,7 +11,7 @@
 # option) any later version.  See http://www.gnu.org/copyleft/gpl.html for
 # the full text of the license.
 
-import re, sys, time
+import argparse, re, sys, time
 from os.path import expanduser
 
 LogFile = '%s/.local/share/gtimelog/timelog.txt' % expanduser("~")
@@ -38,6 +38,19 @@ Categories = {
 ListLimit = 10
 
 
+def print_categories():
+    for k in sorted(Categories):
+        print(k)
+
+
+def print_tasks(category, **kwargs):
+    tasks = get_tasks(category)
+    if "escape" in kwargs and kwargs["escape"]:
+        new_tasks = [t.replace(" ", "\\ ") for t in tasks]
+        tasks = new_tasks
+    print("\n".join(tasks))
+
+
 def show_help():
     try:
         # python3-prettytable will be used if installed
@@ -55,9 +68,8 @@ def show_help():
             print("%s : %s" % (keys,description))
 
 
-def select_tasks(category):
+def get_tasks(category):
     cases = []
-    mytask = 0
     regex = re.compile(r'{}'.format(Categories[category]))
     with open(LogFile, 'r') as timelog:
         for line in timelog:
@@ -67,6 +79,12 @@ def select_tasks(category):
                     cases.append(case.lstrip(": "))
     # Get the last items first
     cases.reverse()
+    return cases
+
+
+def select_tasks(category):
+    cases = get_tasks(category)
+    mytask = 0
     for I in cases:
         if (cases.index(I) + 1) % ListLimit:
             print("{}) {}".format(cases.index(I) + 1, I))
@@ -127,27 +145,36 @@ def log_activity(category, task=None):
     return(0)
 
 if __name__ == '__main__':
-    try:
-        if len(sys.argv) == 1:
-            raise ValueError
+    parser = argparse.ArgumentParser()
+    parser.add_argument('task', nargs='*', help='category | category : task title')
+    parser.add_argument('-c', '--list-categories', help='list available task categories', action='store_true')
+    parser.add_argument('-t', '--list-tasks', nargs=1, metavar='CATEGORY', help='list available tasks for a given category')
+    parser.add_argument('-r', '--raw', help='produce raw output (without pretty formatting)', action='store_true')
+    args = parser.parse_args()
 
-        if len(sys.argv) == 2:
-            if sys.argv[1] == '?':
-                show_help()
-                sys.exit(0)
-            elif sys.argv[1] == 'new':
-                log_activity('new', 'Arrived')
-            elif sys.argv[1] in Categories.keys():
-                (category, task) = select_tasks(sys.argv[1])
-                if category is not None:
-                    log_activity(category, task)
-            else:
-                log_activity(sys.argv[1])
-            sys.exit(0)
+    if args.list_categories:
+        if args.raw:
+            print_categories()
         else:
-            log_activity(sys.argv[1], " ".join(sys.argv[3:]))
+            show_help()
         sys.exit(0)
 
-    except ValueError:
-        print("Missing Argument")
-        sys.exit(1)
+    if args.list_tasks:
+        print_tasks(args.list_tasks[0], escape=args.raw)
+        sys.exit(0)
+
+    if args.task:
+        if len(args.task) == 1:
+            if args.task[0] == '?':
+                show_help()
+                sys.exit(0)
+            elif args.task[0] in Categories:
+                (category, task) = select_tasks(args.task[0])
+                if category:
+                    log_activity(category, task)
+            else:
+                log_activity(args.task[0])
+        else:
+            log_activity(args.task[0], " ".join(args.task[2:]))
+    else:
+        parser.print_help()
