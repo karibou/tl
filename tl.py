@@ -33,6 +33,7 @@ Categories = {
     'is' : 'IS bug work',
     'pers': 'Personal management',
     'comm': 'Community Involvment',
+    'pto': 'Paid Timeout',
     }
 
 ListLimit = 10

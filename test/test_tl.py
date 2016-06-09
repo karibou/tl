@@ -116,6 +116,7 @@ class TlTest(unittest.TestCase):
 | lp    | Launchpad & Public         |
 | meet  | Meetings                   |
 | pers  | Personal management        |
+| pto   | Paid Timeout               |
 | qe    | QE                         |
 | seg   | SEG related activities     |
 | svvp  | SVVP/Virtio dev            |
@@ -296,6 +297,7 @@ kb
 lp
 meet
 pers
+pto
 qe
 seg
 svvp
