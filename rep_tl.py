@@ -16,10 +16,6 @@ def get_time():
     return (week_first, week_last)
 
 
-def get_entries():
-    pass
-
-
 def main():
     report = Reports
     (week_first, week_last) = get_time()
