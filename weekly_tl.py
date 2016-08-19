@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 from gtimelog.timelog import Reports, TimeWindow, format_duration_short
-import datetime
+import datetime, argparse
 
 gt_file = '/home/caribou/Dropbox/gtimelog/timelog.txt'
 virtual_midnight = datetime.time(2, 0)
@@ -22,6 +22,12 @@ def main():
     log_entries = TimeWindow(gt_file, week_first, week_last, virtual_midnight)
     total_work, total_slack = log_entries.totals()
     entries, totals = log_entries.categorized_work_entries()
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-n', '--no-time',
+                        help='Print weekly report without spent time',
+                        action='store_true')
+    args = parser.parse_args()
 
     print("[ACTIVITY] %s to %s (louis-bouchard)" %
           (week_first.isoformat().split("T")[0],
@@ -46,11 +52,17 @@ def main():
                     continue  # skip empty "arrival" entries
 
                 entry = entry[:1].upper() + entry[1:]
-                print(u"  %-61s  %+5s" %
-                      (entry, format_duration_short(duration)))
+                if args.no_time:
+                    print(u"  %-61s  " % entry)
+                else:
+                    print(u"  %-61s  %+5s" %
+                          (entry, format_duration_short(duration)))
 
-            print('-' * 70)
-            print(u"%+70s" % format_duration_short(totals[cat]))
+            if args.no_time:
+                print("")
+            else:
+                print('-' * 70)
+                print(u"%+70s" % format_duration_short(totals[cat]))
         print("Total work done : %s" % format_duration_short(total_work))
 if __name__ == '__main__':
 
