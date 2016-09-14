@@ -73,13 +73,13 @@ def get_tasks(category):
     cases = []
     regex = re.compile(r'{}'.format(Categories[category]))
     with open(LogFile, 'r') as timelog:
-        for line in timelog:
-            if regex.findall(line):
-                case = regex.split(line)[-1].strip()
-                if case.lstrip(": ") not in cases:
-                    cases.append(case.lstrip(": "))
-    # Get the last items first
-    cases.reverse()
+        all_cases = timelog.readlines()
+    all_cases.reverse()
+    for line in all_cases:
+        if regex.findall(line):
+            case = regex.split(line)[-1].strip()
+            if case.lstrip(": ") not in cases:
+                cases.append(case.lstrip(": "))
     return cases
 
 
