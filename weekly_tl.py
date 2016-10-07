@@ -1,7 +1,8 @@
 #!/usr/bin/python3
 
-from gtimelog.timelog import Reports, TimeWindow, format_duration_short
-import datetime, argparse
+import datetime
+import argparse
+from gtimelog.timelog import TimeWindow, format_duration_short
 
 gt_file = '/home/caribou/Dropbox/gtimelog/timelog.txt'
 virtual_midnight = datetime.time(2, 0)
@@ -17,10 +18,9 @@ def get_time():
 
 
 def main():
-    report = Reports
     (week_first, week_last) = get_time()
     log_entries = TimeWindow(gt_file, week_first, week_last, virtual_midnight)
-    total_work, total_slack = log_entries.totals()
+    total_work, _ = log_entries.totals()
     entries, totals = log_entries.categorized_work_entries()
 
     parser = argparse.ArgumentParser()
