@@ -2,9 +2,10 @@
 
 import datetime
 import argparse
+from os.path import expanduser
 from gtimelog.timelog import TimeWindow, format_duration_short
 
-gt_file = '/home/caribou/Dropbox/gtimelog/timelog.txt'
+gt_file = '%s/.local/share/gtimelog/timelog.txt' % expanduser("~")
 virtual_midnight = datetime.time(2, 0)
 
 
