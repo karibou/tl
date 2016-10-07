@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
-from gtimelog.timelog import Reports, TimeWindow, format_duration_short
 import datetime
+from gtimelog.timelog import TimeWindow, format_duration_short
 
 gt_file = '/home/caribou/Dropbox/gtimelog/timelog.txt'
 virtual_midnight = datetime.time(2, 0)
@@ -17,17 +17,17 @@ def get_time():
 
 
 def main():
-    report = Reports
     (week_first, week_last) = get_time()
     log_entries = TimeWindow(gt_file, week_first, week_last, virtual_midnight)
-    total_work, total_slack = log_entries.totals()
-    entries, totals = log_entries.categorized_work_entries()
+    total_work, _ = log_entries.totals()
+    _, totals = log_entries.categorized_work_entries()
 
     ordered_by_time = [(time, cat) for cat, time in totals.items()]
     ordered_by_time.sort(reverse=True)
     max_cat_length = max([len(cat) for cat in totals.keys()])
     line_format = '  %-' + str(max_cat_length + 4) + 's %+5s\t %.0f%%'
-    print("\nTotal work done so far : %s\n" % format_duration_short(total_work))
+    print("\nTotal work done so far : %s\n" %
+          format_duration_short(total_work))
     print('Categories by time spent:')
     for time, cat in ordered_by_time:
         print(line_format % (cat, format_duration_short(time),
