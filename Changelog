@@ -1,0 +1,9 @@
+tl (0.1) yakkety; urgency=medium
+
+  First versionned release.
+    * [weekly_tl] Add time displayed in minutes and userid
+    * [rep_tl,weekly_tl] Remove hardcoded path to gtimelog file
+    * [tl_sum] Add new task summary script
+    * [tl.py] Display tasks from the last one in
+
+ -- Louis Bouchard <louis.bouchard@ubuntu.com>  Thu, 07 Oct 2016 15:49:05 +0200
