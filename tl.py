@@ -21,16 +21,16 @@ Categories = {
     'lp': 'Launchpad & Public',
     'train': 'Mentoring / Edu / Training',
     'meet': 'Meetings',
-    'seg' : 'SEG related activities',
-    'charm' : 'Charm Devel',
-    'doc' : 'Documentation',
-    'kb' : 'Knowledge base Work',
-    'z' : 'Mainframe related',
-    'ib' : 'Mellanox related',
-    'svvp' : 'SVVP/Virtio dev',
-    'qe' : 'QE',
-    'fan' : 'Fan development',
-    'is' : 'IS bug work',
+    'seg': 'SEG related activities',
+    'charm': 'Charm Devel',
+    'doc': 'Documentation',
+    'kb': 'Knowledge base Work',
+    'z': 'Mainframe related',
+    'ib': 'Mellanox related',
+    'svvp': 'SVVP/Virtio dev',
+    'qe': 'QE',
+    'fan': 'Fan development',
+    'is': 'IS bug work',
     'pers': 'Personal management',
     'comm': 'Community Involvment',
     'pto': 'Paid Timeout',
@@ -56,17 +56,17 @@ def show_help():
     try:
         # python3-prettytable will be used if installed
         import prettytable
-        categories = prettytable.PrettyTable(["Key","Description"],
-                                             sortby = "Key",padding_width = 1)
+        categories = prettytable.PrettyTable(["Key", "Description"],
+                                             sortby="Key", padding_width=1)
         categories.align["Key"] = "l"
         categories.align["Description"] = "l"
         categories.padding_width = 1
-        for keys,description in Categories.items():
+        for keys, description in Categories.items():
             categories.add_row([keys, description])
         print(categories)
     except:
-        for keys,description in Categories.items():
-            print("%s : %s" % (keys,description))
+        for keys, description in Categories.items():
+            print("%s : %s" % (keys, description))
 
 
 def get_tasks(category):
@@ -94,9 +94,10 @@ def select_tasks(category):
             print("{}) {}".format(cases.index(I) + 1, I))
             if cases.index(I) + 1 < len(cases):
                 try:
-                    mytask = input("Select task (0 to exit,<CR> to continue): ")
+                    mytask = input("Select task (0 to exit,<CR> to continue): "
+                                   )
                     if mytask == '0':
-                            return(None, None)
+                        return(None, None)
                     if mytask == '' or not mytask.isdecimal():
                         continue
                     else:
@@ -111,7 +112,7 @@ def select_tasks(category):
         try:
             mytask = input("Select task (0 or <CR> to exit): ")
             if mytask == '0' or mytask == '' or not mytask.isdecimal():
-                    return(None, None)
+                return(None, None)
             else:
                 mytask = int(mytask)
 
@@ -130,8 +131,8 @@ def log_activity(category, task=None):
 
     now = time.localtime()
     today = '{:04d}-{:02d}-{:02d} {:02d}:{:02d}'.format(
-            now.tm_year, now.tm_mon, now.tm_mday,
-            now.tm_hour, now.tm_min)
+        now.tm_year, now.tm_mon, now.tm_mday,
+        now.tm_hour, now.tm_min)
 
     with open(LogFile, 'a') as timelog:
         if task is None:
@@ -143,14 +144,20 @@ def log_activity(category, task=None):
             else:
                 timelog.write('{}: {} : {}\n'.format(
                     today, category, task))
-    return(0)
+    return 0
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('task', nargs='*', help='category | category : task title')
-    parser.add_argument('-c', '--list-categories', help='list available task categories', action='store_true')
-    parser.add_argument('-t', '--list-tasks', nargs=1, metavar='CATEGORY', help='list available tasks for a given category')
-    parser.add_argument('-r', '--raw', help='produce raw output (without pretty formatting)', action='store_true')
+    parser.add_argument('task', nargs='*',
+                        help='category | category : task title')
+    parser.add_argument('-c', '--list-categories',
+                        help='list available task categories',
+                        action='store_true')
+    parser.add_argument('-t', '--list-tasks', nargs=1, metavar='CATEGORY',
+                        help='list available tasks for a given category')
+    parser.add_argument('-r', '--raw',
+                        help='produce raw output (without pretty formatting)',
+                        action='store_true')
     args = parser.parse_args()
 
     if args.list_categories:
@@ -170,7 +177,7 @@ if __name__ == '__main__':
                 show_help()
                 sys.exit(0)
             elif args.task[0] == 'new':
-                log_activity('new', 'Arrived');
+                log_activity('new', 'Arrived')
             elif args.task[0] in Categories:
                 (category, task) = select_tasks(args.task[0])
                 if category:
