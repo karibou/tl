@@ -4,7 +4,7 @@ import datetime
 from os.path import expanduser
 from gtimelog.timelog import TimeWindow, format_duration_short
 
-gt_file = '%s/.local/share/gtimelog/timelog.txt' % expanduser("~")
+LogFile = '%s/.local/share/gtimelog/timelog.txt' % expanduser("~")
 virtual_midnight = datetime.time(2, 0)
 
 
@@ -19,7 +19,7 @@ def get_time():
 
 def main():
     (week_first, week_last) = get_time()
-    log_entries = TimeWindow(gt_file, week_first, week_last, virtual_midnight)
+    log_entries = TimeWindow(LogFile, week_first, week_last, virtual_midnight)
     total_work, _ = log_entries.totals()
     _, totals = log_entries.categorized_work_entries()
 
