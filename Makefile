@@ -1,4 +1,4 @@
 #!/usr/bin/make
 
 tests:
-	@nosetests3 -v --with-coverage
+	@nosetests3 -v --with-coverage --cover-package=tl
