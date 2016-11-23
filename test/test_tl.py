@@ -88,6 +88,14 @@ class TlTest(unittest.TestCase):
         line = self._get_last_log_line().strip()
         self.assertTrue(line.endswith('Arrived'))
 
+    def test_new_with_arg(self):
+        '''testing only 'new' argument with --logfile argument'''
+        argfile = [tl.LogFile]
+        tl.LogFile = tl.set_logfile(argfile)
+        tl.log_activity('new', 'Arrived')
+        line = self._get_last_log_line().strip()
+        self.assertTrue(line.endswith('Arrived'))
+
     def test_ua_entry(self):
         '''testing a UA entry'''
         tl.log_activity('ua', 'This is one entry')
@@ -352,9 +360,9 @@ python""")
             Log = tl.set_logfile()
             self.assertEqual(Log, 'mydir/.local/share/gtimelog/timelog.txt')
 
-
     def test_logfile_arg(self):
-        Log = tl.set_logfile('mylog')
+        argline = ['mylog']
+        Log = tl.set_logfile(argline)
         self.assertEqual(Log, 'mylog')
 
     def test_logfile_env_variable(self):

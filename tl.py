@@ -42,7 +42,7 @@ ListLimit = 10
 
 def set_logfile(argfile=None):
     if argfile is not None:
-        return argfile
+        return argfile[0]
     else:
         env = os.environ.get("GTIMELOG_FILE")
         if env is not None:
