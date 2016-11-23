@@ -11,7 +11,6 @@
 # option) any later version.  See http://www.gnu.org/copyleft/gpl.html for
 # the full text of the license.
 
-LogFile = '%s/.local/share/gtimelog/timelog.txt' % expanduser("~")
 import argparse
 import re
 import sys
@@ -39,6 +38,16 @@ Categories = {
     }
 
 ListLimit = 10
+
+
+def set_logfile(argfile=None):
+    if argfile is not None:
+        return argfile
+    else:
+        env = os.environ.get("GTIMELOG_FILE")
+        if env is not None:
+            return env
+    return '%s/.local/share/gtimelog/timelog.txt' % os.path.expanduser("~")
 
 
 def print_categories():
@@ -162,7 +171,14 @@ if __name__ == '__main__':
     parser.add_argument('-r', '--raw',
                         help='produce raw output (without pretty formatting)',
                         action='store_true')
+    parser.add_argument('-l', '--logfile', nargs=1, metavar='LOGFILE',
+                        help='Path to the gtimelog logfile to be use')
     args = parser.parse_args()
+
+    if args.logfile is not None:
+        LogFile = set_logfile(args.logfile)
+    else:
+        LogFile = set_logfile()
 
     if args.list_categories:
         if args.raw:

@@ -347,7 +347,25 @@ c
 ruby
 python""")
 
+    def test_logfile_default(self):
+        with patch('os.path.expanduser', return_value='mydir'):
+            Log = tl.set_logfile()
+            self.assertEqual(Log, 'mydir/.local/share/gtimelog/timelog.txt')
+
+
+    def test_logfile_arg(self):
+        Log = tl.set_logfile('mylog')
+        self.assertEqual(Log, 'mylog')
+
+    def test_logfile_env_variable(self):
+        with patch('os.environ.get', return_value='mylogenv'):
+            Log = tl.set_logfile()
+            self.assertEqual(Log, 'mylogenv')
+
+        pass
+
     def _get_last_log_line(self):
+
         with open(tl.LogFile, 'r') as timelog:
             for line in timelog:
                 continue
