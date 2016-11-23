@@ -11,10 +11,12 @@
 # option) any later version.  See http://www.gnu.org/copyleft/gpl.html for
 # the full text of the license.
 
-import argparse, re, sys, time
-from os.path import expanduser
-
 LogFile = '%s/.local/share/gtimelog/timelog.txt' % expanduser("~")
+import argparse
+import re
+import sys
+import time
+import os
 
 Categories = {
     'ua': 'L3 / L3 support',
@@ -146,7 +148,9 @@ def log_activity(category, task=None):
                     today, category, task))
     return 0
 
+
 if __name__ == '__main__':
+
     parser = argparse.ArgumentParser()
     parser.add_argument('task', nargs='*',
                         help='category | category : task title')

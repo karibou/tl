@@ -1,4 +1,8 @@
-import unittest, subprocess, sys, tempfile, os, shutil
+import unittest
+import sys
+import tempfile
+import os
+import shutil
 from mock import patch
 import tl
 
@@ -11,7 +15,8 @@ class TlTest(unittest.TestCase):
         # Prepare timelog file with existing tasks
         with open(tl.LogFile, 'w') as timelog:
             timelog.write("2015-03-13 13:21: lunch** :\n")
-            timelog.write("2015-03-13 16:34: Launchpad & Public :  lp1415880\n")
+            timelog.write("2015-03-13 16:34: Launchpad & Public :  lp1415880\n"
+                          )
             timelog.write("2015-03-13 17:45: L3 / L3 support :  SF7-openafs\n")
             timelog.write("2015-03-16 08:41: arrived\n")
             timelog.write("2015-03-16 09:57: Personal management :  email\n")
@@ -21,7 +26,8 @@ class TlTest(unittest.TestCase):
                           "python\n"))
             timelog.write(("2015-03-17 11:02: Mentoring / Edu / Training :  "
                           "ruby\n"))
-            timelog.write("2015-03-17 11:03: Mentoring / Edu / Training :  c\n")
+            timelog.write("2015-03-17 11:03: Mentoring / Edu / Training :  c\n"
+                          )
             timelog.write(("2015-03-17 11:04: Mentoring / Edu / Training :  "
                           "apl\n"))
             timelog.write(("2015-03-17 11:05: Mentoring / Edu / Training :  "
@@ -53,7 +59,8 @@ class TlTest(unittest.TestCase):
             timelog.write("2015-03-19 11:12: Launchpad & Public : supp\n")
             timelog.write("2015-03-19 11:13: Launchpad & Public : team\n")
             timelog.write("2015-03-19 11:14: Launchpad & Public : mgr\n")
-            timelog.write("2015-03-19 11:15: Launchpad & Public : foundation\n")
+            timelog.write("2015-03-19 11:15: Launchpad & Public : foundation\n"
+                          )
             timelog.write("2015-03-19 11:16: Launchpad & Public : server\n")
             timelog.write("2015-03-19 11:17: Launchpad & Public : sabdfl\n")
             timelog.write("2015-03-19 11:18: Launchpad & Public : kernel\n")
