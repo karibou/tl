@@ -9,11 +9,12 @@ import tl
 
 class TlTest(unittest.TestCase):
     @classmethod
-    def setUpClass(letest):
-        letest.workdir = tempfile.mkdtemp()
-        tl.LogFile = os.path.join(letest.workdir, 'timelog.txt')
+    def setUpClass(self):
+        self.workdir = tempfile.mkdtemp()
+        self.LogFile = os.path.join(self.workdir, 'timelog.txt')
+        tl.LogFile = self.LogFile
         # Prepare timelog file with existing tasks
-        with open(tl.LogFile, 'w') as timelog:
+        with open(self.LogFile, 'w') as timelog:
             timelog.write("2015-03-13 13:21: lunch** :\n")
             timelog.write("2015-03-13 16:34: Launchpad & Public :  lp1415880\n"
                           )
@@ -79,8 +80,8 @@ class TlTest(unittest.TestCase):
             timelog.write("2015-03-19 11:31: Launchpad & Public : what\n")
 
     @classmethod
-    def tearDownClass(letest):
-        shutil.rmtree(letest.workdir)
+    def tearDownClass(self):
+        shutil.rmtree(self.workdir)
 
     def test_new(self):
         '''testing only 'new' argument'''
@@ -90,16 +91,16 @@ class TlTest(unittest.TestCase):
 
     def test_new_with_arg(self):
         '''testing only 'new' argument with --logfile argument'''
-        argfile = [tl.LogFile]
-        tl.LogFile = tl.set_logfile(argfile)
+        argfile = [self.LogFile]
+        self.LogFile = tl.set_logfile(argfile)
         tl.log_activity('new', 'Arrived')
         line = self._get_last_log_line().strip()
         self.assertTrue(line.endswith('Arrived'))
 
     def test_new_with_env_variable(self):
         '''testing only 'new' argument with GTIMELOG_FILE env variable'''
-        with patch('os.environ.get', return_value=tl.LogFile):
-            tl.LogFile = tl.set_logfile()
+        with patch('os.environ.get', return_value=self.LogFile):
+            self.LogFile = tl.set_logfile()
         tl.log_activity('new', 'Arrived')
         line = self._get_last_log_line().strip()
         self.assertTrue(line.endswith('Arrived'))
@@ -378,11 +379,9 @@ python""")
             Log = tl.set_logfile()
             self.assertEqual(Log, 'mylogenv')
 
-        pass
-
     def _get_last_log_line(self):
 
-        with open(tl.LogFile, 'r') as timelog:
+        with open(self.LogFile, 'r') as timelog:
             for line in timelog:
                 continue
         return(line)

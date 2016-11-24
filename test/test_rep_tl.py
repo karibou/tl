@@ -12,11 +12,11 @@ import rep_tl
 
 class RepTlTest(unittest.TestCase):
     @classmethod
-    def setUpClass(letest):
-        letest.workdir = tempfile.mkdtemp()
-        rep_tl.LogFile = os.path.join(letest.workdir, 'timelog.txt')
+    def setUpClass(self):
+        self.workdir = tempfile.mkdtemp()
+        self.LogFile = os.path.join(self.workdir, 'timelog.txt')
         # Prepare timelog file with existing tasks
-        with open(rep_tl.LogFile, 'w') as timelog:
+        with open(self.LogFile, 'w') as timelog:
             timelog.write("2015-03-13 13:21: lunch** :\n")
             timelog.write("2015-03-13 16:34: Launchpad & Public :  lp1415880\n"
                           )
@@ -82,8 +82,8 @@ class RepTlTest(unittest.TestCase):
             timelog.write("2015-03-19 11:31: Launchpad & Public : what\n")
 
     @classmethod
-    def tearDownClass(letest):
-        shutil.rmtree(letest.workdir)
+    def tearDownClass(self):
+        shutil.rmtree(self.workdir)
 
     def test_rep_tl(self):
         '''testing default'''
@@ -100,7 +100,7 @@ class RepTlTest(unittest.TestCase):
             with patch('rep_tl.get_time',
                        return_value=(week_first, week_last)):
                 with patch('rep_tl.set_logfile',
-                            return_value=rep_tl.LogFile):
+                            return_value=self.LogFile):
                     rep_tl.main()
                     output = sys.stdout.getvalue().strip()
                     self.assertRegex(output, regex)
@@ -115,7 +115,7 @@ class RepTlTest(unittest.TestCase):
         week_last = week_first + datetime.timedelta(days=6)
         week_last = week_last.replace(hour=23, minute=59, second=59)
         args = argparse.Namespace()
-        args.logfile=[rep_tl.LogFile]
+        args.logfile=[self.LogFile]
         with patch('argparse.ArgumentParser.parse_args', return_value=args):
             with patch('rep_tl.get_time',
                        return_value=(week_first, week_last)):
@@ -137,7 +137,7 @@ class RepTlTest(unittest.TestCase):
         with patch('argparse.ArgumentParser.parse_args', return_value=args):
             with patch('rep_tl.get_time',
                        return_value=(week_first, week_last)):
-                with patch('os.environ.get', return_value=rep_tl.LogFile):
+                with patch('os.environ.get', return_value=self.LogFile):
                     rep_tl.main()
                     output = sys.stdout.getvalue().strip()
                     self.assertRegex(output, regex)
