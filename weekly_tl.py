@@ -6,7 +6,6 @@ import os
 from gtimelog.timelog import TimeWindow, format_duration_short, as_minutes
 
 virtual_midnight = datetime.time(2, 0)
-userid = '<replace by your user identification>'
 
 
 def set_logfile(argfile=None):
@@ -17,6 +16,16 @@ def set_logfile(argfile=None):
         if env is not None:
             return env
     return '%s/.local/share/gtimelog/timelog.txt' % os.path.expanduser("~")
+
+
+def set_userid(user=None):
+    if user is not None:
+        return user[0]
+    else:
+        env = os.environ.get("GTIMELOG_USER")
+        if env is not None:
+            return env
+    return '<replace by your user identification>'
 
 
 def get_time():
@@ -32,6 +41,8 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-l', '--logfile', nargs=1, metavar='LOGFILE',
                         help='Path to the gtimelog logfile to be use')
+    parser.add_argument('-u', '--user', nargs=1, metavar='USER',
+                        help='User Identification to be used for report')
     parser.add_argument('-n', '--no-time',
                         help='Print weekly report without spent time',
                         action='store_true')
@@ -42,6 +53,11 @@ def main():
     else:
         LogFile = set_logfile()
 
+    if args.user is not None:
+        UserId = set_userid(args.user)
+    else:
+        UserId = set_userid()
+
     (week_first, week_last) = get_time()
     log_entries = TimeWindow(LogFile, week_first, week_last, virtual_midnight)
     total_work, _ = log_entries.totals()
@@ -50,7 +66,7 @@ def main():
     print("[ACTIVITY] %s to %s (%s)" %
           (week_first.isoformat().split("T")[0],
            week_last.isoformat().split("T")[0],
-           userid))
+           UserId))
     if entries:
         if None in entries:
             categories = sorted(entries)
@@ -85,6 +101,8 @@ def main():
                 print(u"%+70s %4s" % (format_duration_short(totals[cat]),
                                       as_minutes(totals[cat])))
         print("Total work done : %s" % format_duration_short(total_work))
+
+
 if __name__ == '__main__':
 
     main()

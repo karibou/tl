@@ -19,6 +19,7 @@ class WeeklyTlTest(unittest.TestCase):
         self.args.user = None
         self.regex = re.compile(r'SF7-openafs.*1:10.*70\n')
         self.regex_notime = re.compile(r'SF7-openafs * \n')
+        self.regex_defuser = re.compile(r'replace by your user identification')
         self.workdir = tempfile.mkdtemp()
         self.LogFile = os.path.join(self.workdir, 'timelog.txt')
         self.back = datetime.datetime.today()
@@ -145,3 +146,27 @@ class WeeklyTlTest(unittest.TestCase):
                     weekly_tl.main()
                     output = sys.stdout.getvalue().strip()
                     self.assertRegex(output, self.regex)
+
+    def test_weekly_tl_with_user_variable(self):
+        '''testing weekly_tl with GTIMELOG_USER env variable'''
+        with patch('argparse.ArgumentParser.parse_args',
+                   return_value=self.args):
+            with patch('weekly_tl.get_time',
+                       return_value=(self.week_first, self.week_last)):
+                with patch('os.environ.get', return_value='my-user'):
+                    weekly_tl.main()
+                    user_regex = re.compile(r'my-user')
+                    output = sys.stdout.getvalue().strip()
+                    self.assertRegex(output, user_regex)
+
+    def test_weekly_tl_with_user_arg(self):
+        '''testing weekly_tl with GTIMELOG_USER env variable'''
+        self.args.user = ['my-user']
+        with patch('argparse.ArgumentParser.parse_args',
+                   return_value=self.args):
+            with patch('weekly_tl.get_time',
+                       return_value=(self.week_first, self.week_last)):
+                weekly_tl.main()
+                user_regex = re.compile(r'my-user')
+                output = sys.stdout.getvalue().strip()
+                self.assertRegex(output, user_regex)
