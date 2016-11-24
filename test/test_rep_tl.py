@@ -6,7 +6,7 @@ import re
 import shutil
 import datetime
 import argparse
-from mock import patch, mock
+from mock import patch
 import rep_tl
 
 
@@ -16,10 +16,11 @@ class RepTlTest(unittest.TestCase):
         self.regex = re.compile(r'Total work done so far : 3:10')
         self.workdir = tempfile.mkdtemp()
         self.LogFile = os.path.join(self.workdir, 'timelog.txt')
-        self.backthen = datetime.datetime.today()
-        self.backthen = self.backthen.replace(year=2015, month=3, day=16,
-                              hour=0, minute=0, second=0, microsecond=0)
-        self.week_first = self.backthen - datetime.timedelta(days=self.backthen.weekday())
+        self.back = datetime.datetime.today()
+        self.back = self.back.replace(year=2015, month=3, day=16, hour=0,
+                                      minute=0, second=0, microsecond=0)
+        self.week_first = (self.back -
+                           datetime.timedelta(days=self.back.weekday()))
         self.week_last = self.week_first + datetime.timedelta(days=6)
         self.week_last = self.week_last.replace(hour=23, minute=59, second=59)
         # Prepare timelog file with existing tasks
@@ -95,12 +96,12 @@ class RepTlTest(unittest.TestCase):
     def test_rep_tl(self):
         '''testing default'''
         args = argparse.Namespace()
-        args.logfile=None
+        args.logfile = None
         with patch('argparse.ArgumentParser.parse_args', return_value=args):
             with patch('rep_tl.get_time',
                        return_value=(self.week_first, self.week_last)):
                 with patch('rep_tl.set_logfile',
-                            return_value=self.LogFile):
+                           return_value=self.LogFile):
                     rep_tl.main()
                     output = sys.stdout.getvalue().strip()
                     self.assertRegex(output, self.regex)
@@ -108,7 +109,7 @@ class RepTlTest(unittest.TestCase):
     def test_rep_tl_with_arg(self):
         '''testing only 'new' argument with --logfile argument'''
         args = argparse.Namespace()
-        args.logfile=[self.LogFile]
+        args.logfile = [self.LogFile]
         with patch('argparse.ArgumentParser.parse_args', return_value=args):
             with patch('rep_tl.get_time',
                        return_value=(self.week_first, self.week_last)):
@@ -119,7 +120,7 @@ class RepTlTest(unittest.TestCase):
     def test_rep_tl_with_env_variable(self):
         '''testing only 'new' argument with GTIMELOG_FILE env variable'''
         args = argparse.Namespace()
-        args.logfile=None
+        args.logfile = None
         with patch('argparse.ArgumentParser.parse_args', return_value=args):
             with patch('rep_tl.get_time',
                        return_value=(self.week_first, self.week_last)):
