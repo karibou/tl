@@ -13,6 +13,10 @@ import weekly_tl
 class WeeklyTlTest(unittest.TestCase):
     @classmethod
     def setUpClass(self):
+        self.args = argparse.Namespace()
+        self.args.logfile = None
+        self.args.no_time = None
+        self.args.user = None
         self.regex = re.compile(r'SF7-openafs.*1:10.*70\n')
         self.regex_notime = re.compile(r'SF7-openafs * \n')
         self.workdir = tempfile.mkdtemp()
@@ -96,10 +100,8 @@ class WeeklyTlTest(unittest.TestCase):
 
     def test_weekly_tl(self):
         '''testing default'''
-        args = argparse.Namespace()
-        args.logfile = None
-        args.no_time = None
-        with patch('argparse.ArgumentParser.parse_args', return_value=args):
+        with patch('argparse.ArgumentParser.parse_args',
+                   return_value=self.args):
             with patch('weekly_tl.get_time',
                        return_value=(self.week_first, self.week_last)):
                 with patch('weekly_tl.set_logfile',
@@ -107,13 +109,13 @@ class WeeklyTlTest(unittest.TestCase):
                     weekly_tl.main()
                     output = sys.stdout.getvalue().strip()
                     self.assertRegex(output, self.regex)
+                    self.assertRegex(output, self.regex_defuser)
 
     def test_weekly_tl_with_notime(self):
         '''testing weekly_tl with --notime argument'''
-        args = argparse.Namespace()
-        args.logfile = None
-        args.no_time = True
-        with patch('argparse.ArgumentParser.parse_args', return_value=args):
+        self.args.no_time = True
+        with patch('argparse.ArgumentParser.parse_args',
+                   return_value=self.args):
             with patch('weekly_tl.get_time',
                        return_value=(self.week_first, self.week_last)):
                 with patch('weekly_tl.set_logfile',
@@ -124,10 +126,9 @@ class WeeklyTlTest(unittest.TestCase):
 
     def test_weekly_tl_with_logfile(self):
         '''testing weekly_tl with --logfile argument'''
-        args = argparse.Namespace()
-        args.logfile = [self.LogFile]
-        args.no_time = None
-        with patch('argparse.ArgumentParser.parse_args', return_value=args):
+        self.args.logfile = [self.LogFile]
+        with patch('argparse.ArgumentParser.parse_args',
+                   return_value=self.args):
             with patch('weekly_tl.get_time',
                        return_value=(self.week_first, self.week_last)):
                 weekly_tl.main()
@@ -136,10 +137,8 @@ class WeeklyTlTest(unittest.TestCase):
 
     def test_weekly_tl_with_env_variable(self):
         '''testing only 'new' argument with GTIMELOG_FILE env variable'''
-        args = argparse.Namespace()
-        args.logfile = None
-        args.no_time = None
-        with patch('argparse.ArgumentParser.parse_args', return_value=args):
+        with patch('argparse.ArgumentParser.parse_args',
+                   return_value=self.args):
             with patch('weekly_tl.get_time',
                        return_value=(self.week_first, self.week_last)):
                 with patch('os.environ.get', return_value=self.LogFile):
