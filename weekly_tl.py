@@ -46,6 +46,9 @@ def main():
     parser.add_argument('-n', '--no-time',
                         help='Print weekly report without spent time',
                         action='store_true')
+    parser.add_argument('-m', '--minutes',
+                        help='Print weekly report with spent time in minutes',
+                        action='store_true')
     args = parser.parse_args()
 
     if args.logfile is not None:
@@ -90,16 +93,24 @@ def main():
                 if args.no_time:
                     print(u"  %-61s  " % entry)
                 else:
-                    print(u"  %-61s  %+5s %+4s" %
-                          (entry, format_duration_short(duration),
-                           as_minutes(duration)))
+                    if args.minutes:
+                        print(u"  %-61s  %+5s %+4s" %
+                            (entry, format_duration_short(duration),
+                            as_minutes(duration)))
+                    else:
+                        print(u"  %-61s  %+5s" %
+                            (entry, format_duration_short(duration)))
 
             if args.no_time:
                 print("")
             else:
-                print('-' * 75)
-                print(u"%+70s %4s" % (format_duration_short(totals[cat]),
-                                      as_minutes(totals[cat])))
+                if args.minutes:
+                    print('-' * 75)
+                    print(u"%+70s %4s" % (format_duration_short(totals[cat]),
+                                        as_minutes(totals[cat])))
+                else:
+                    print('-' * 70)
+                    print(u"%+70s" % (format_duration_short(totals[cat])))
         print("Total work done : %s" % format_duration_short(total_work))
 
 
