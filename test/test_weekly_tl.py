@@ -17,7 +17,9 @@ class WeeklyTlTest(unittest.TestCase):
         self.args.logfile = None
         self.args.no_time = None
         self.args.user = None
-        self.regex = re.compile(r'SF7-openafs.*1:10.*70\n')
+        self.args.minutes = True
+        self.regex = re.compile(r'SF7-openafs.*1:10\n')
+        self.regex_with_minutes = re.compile(r'SF7-openafs.*1:10.*70\n')
         self.regex_notime = re.compile(r'SF7-openafs * \n')
         self.regex_defuser = re.compile(r'replace by your user identification')
         self.workdir = tempfile.mkdtemp()
@@ -101,6 +103,7 @@ class WeeklyTlTest(unittest.TestCase):
 
     def test_weekly_tl(self):
         '''testing default'''
+        self.args.minutes = False
         with patch('argparse.ArgumentParser.parse_args',
                    return_value=self.args):
             with patch('weekly_tl.get_time',
@@ -110,6 +113,20 @@ class WeeklyTlTest(unittest.TestCase):
                     weekly_tl.main()
                     output = sys.stdout.getvalue().strip()
                     self.assertRegex(output, self.regex)
+                    self.assertRegex(output, self.regex_defuser)
+
+    def test_weekly_tl_with_minutes(self):
+        '''testing with --minutes argument'''
+        self.args.minutes = True
+        with patch('argparse.ArgumentParser.parse_args',
+                   return_value=self.args):
+            with patch('weekly_tl.get_time',
+                       return_value=(self.week_first, self.week_last)):
+                with patch('weekly_tl.set_logfile',
+                           return_value=self.LogFile):
+                    weekly_tl.main()
+                    output = sys.stdout.getvalue().strip()
+                    self.assertRegex(output, self.regex_with_minutes)
                     self.assertRegex(output, self.regex_defuser)
 
     def test_weekly_tl_with_notime(self):
