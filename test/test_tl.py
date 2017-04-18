@@ -83,6 +83,18 @@ class TlTest(unittest.TestCase):
     def tearDownClass(self):
         shutil.rmtree(self.workdir)
 
+    def test_create_logfile(self):
+        '''
+        Test new logfile creation
+        '''
+        newlogfile = os.path.join(self.workdir, 'newtimelog.txt')
+        self.assertFalse(os.path.exists(newlogfile),
+                         '%s already exists' % newlogfile)
+        os.environ.setdefault('GTIMELOG_FILE', '%s' % newlogfile)
+        tl.set_logfile()
+        self.assertTrue(os.path.exists(newlogfile),
+                        '%s not created' % newlogfile)
+
     def test_new(self):
         '''testing only 'new' argument'''
         tl.log_activity('new', 'Arrived')
@@ -365,9 +377,11 @@ ruby
 python""")
 
     def test_logfile_default(self):
-        with patch('os.path.expanduser', return_value='mydir'):
-            Log = tl.set_logfile()
-            self.assertEqual(Log, 'mydir/.local/share/gtimelog/timelog.txt')
+        with patch('os.path.expanduser', return_value=self.workdir):
+            with patch('tl.create_logfile', return_value=self.LogFile):
+                Log = tl.set_logfile()
+                self.assertEqual(Log, '%s/newtimelog.txt'
+                                 % self.workdir)
 
     def test_logfile_arg(self):
         argline = ['%s/mylog' % self.workdir]

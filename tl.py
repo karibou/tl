@@ -40,14 +40,24 @@ Categories = {
 ListLimit = 10
 
 
+def create_logfile(newfile):
+    if not os.path.exists(newfile):
+        with open(newfile, 'w') as newfile:
+            newfile.write('')
+
+
 def set_logfile(argfile=None):
     if argfile is not None:
-        return argfile[0]
+        logfile = argfile[0]
     else:
         env = os.environ.get("GTIMELOG_FILE")
         if env is not None:
-            return env
-    return '%s/.local/share/gtimelog/timelog.txt' % os.path.expanduser("~")
+            logfile = env
+        else:
+            home = os.path.expanduser("~")
+            logfile = '%s/.local/share/gtimelog/timelog.txt' % home
+    create_logfile(logfile)
+    return logfile
 
 
 def print_categories():
