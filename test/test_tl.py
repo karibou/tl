@@ -94,6 +94,18 @@ class TlTest(unittest.TestCase):
         self.assertTrue(os.path.exists(newlogfile),
                         '%s not created' % newlogfile)
 
+    def test_create_logfile_no_dir(self):
+        '''
+        Test new logfile creation in inexistant directory
+        '''
+        newlogfile = os.path.join(self.workdir, 'a/b', 'newtimelog.txt')
+        self.assertFalse(os.path.exists(newlogfile),
+                         '%s already exists' % newlogfile)
+        argfile = [newlogfile]
+        tl.set_logfile(argfile)
+        self.assertTrue(os.path.exists(newlogfile),
+                        '%s not created' % newlogfile)
+
     def test_new_entry(self):
         '''testing only 'new' argument'''
         tl.LogFile = self.LogFile

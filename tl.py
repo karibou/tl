@@ -42,6 +42,7 @@ ListLimit = 10
 
 def create_logfile(newfile):
     if not os.path.exists(newfile):
+        os.makedirs(os.path.dirname(newfile))
         with open(newfile, 'w') as newfile:
             newfile.write('')
 
