@@ -94,20 +94,18 @@ class TlTest(unittest.TestCase):
         self.assertTrue(os.path.exists(newlogfile),
                         '%s not created' % newlogfile)
 
-    def test_new(self):
+    def test_new_entry(self):
         '''testing only 'new' argument'''
         tl.LogFile = self.LogFile
         tl.log_activity('new', 'Arrived')
         line = self._get_last_log_line().strip()
         self.assertTrue(line.endswith('Arrived'))
 
-    def test_new_with_arg(self):
-        '''testing only 'new' argument with --logfile argument'''
+    def test_logfile_with_arg(self):
+        '''testing logfile definition with --logfile argument'''
         argfile = [self.LogFile]
-        self.LogFile = tl.set_logfile(argfile)
-        tl.log_activity('new', 'Arrived')
-        line = self._get_last_log_line().strip()
-        self.assertTrue(line.endswith('Arrived'))
+        logfile = tl.set_logfile(argfile)
+        self.assertTrue(logfile, self.LogFile)
 
     def test_new_with_empty_env_variable(self):
         '''testing only 'new' argument with empty GTIMELOG_FILE env variable'''
@@ -390,7 +388,7 @@ python""")
         with patch('os.path.expanduser', return_value=self.workdir):
             with patch('tl.create_logfile', return_value=self.LogFile):
                 Log = tl.set_logfile()
-                self.assertEqual(Log, '%s/newtimelog.txt'
+                self.assertEqual(Log, '%s/.local/share/gtimelog/timelog.txt'
                                  % self.workdir)
 
     def test_logfile_arg(self):
