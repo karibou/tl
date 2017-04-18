@@ -12,7 +12,6 @@ class TlTest(unittest.TestCase):
     def setUpClass(self):
         self.workdir = tempfile.mkdtemp()
         self.LogFile = os.path.join(self.workdir, 'timelog.txt')
-        tl.LogFile = self.LogFile
         # Prepare timelog file with existing tasks
         with open(self.LogFile, 'w') as timelog:
             timelog.write("2015-03-13 13:21: lunch** :\n")
@@ -92,11 +91,13 @@ class TlTest(unittest.TestCase):
                          '%s already exists' % newlogfile)
         os.environ.setdefault('GTIMELOG_FILE', '%s' % newlogfile)
         tl.set_logfile()
+        tl.set_logfile(argfile)
         self.assertTrue(os.path.exists(newlogfile),
                         '%s not created' % newlogfile)
 
     def test_new(self):
         '''testing only 'new' argument'''
+        tl.LogFile = self.LogFile
         tl.log_activity('new', 'Arrived')
         line = self._get_last_log_line().strip()
         self.assertTrue(line.endswith('Arrived'))
@@ -126,18 +127,21 @@ class TlTest(unittest.TestCase):
 
     def test_ua_entry(self):
         '''testing a UA entry'''
+        tl.LogFile = self.LogFile
         tl.log_activity('ua', 'This is one entry')
         line = self._get_last_log_line().strip()
         self.assertTrue(line.endswith('L3 / L3 support : This is one entry'))
 
     def test_not_logged(self):
         '''testing argument with two asterix'''
+        tl.LogFile = self.LogFile
         tl.log_activity('lunch**')
         line = self._get_last_log_line().strip()
         self.assertTrue(line.endswith('lunch**'))
 
     def test_absolutely_not_logged(self):
         '''testing argument with three asterix'''
+        tl.LogFile = self.LogFile
         tl.log_activity('lunch***')
         line = self._get_last_log_line().strip()
         self.assertTrue(line.endswith('lunch***'))
