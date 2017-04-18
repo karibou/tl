@@ -370,14 +370,15 @@ python""")
             self.assertEqual(Log, 'mydir/.local/share/gtimelog/timelog.txt')
 
     def test_logfile_arg(self):
-        argline = ['mylog']
+        argline = ['%s/mylog' % self.workdir]
         Log = tl.set_logfile(argline)
-        self.assertEqual(Log, 'mylog')
+        self.assertEqual(Log, '%s/mylog' % self.workdir)
 
     def test_logfile_env_variable(self):
-        with patch('os.environ.get', return_value='mylogenv'):
+        with patch('os.environ.get',
+                   return_value='%s/mylogenv' % self.workdir):
             Log = tl.set_logfile()
-            self.assertEqual(Log, 'mylogenv')
+            self.assertEqual(Log, '%s/mylogenv' % self.workdir)
 
     def _get_last_log_line(self):
 
