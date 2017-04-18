@@ -51,7 +51,7 @@ def set_logfile(argfile=None):
         logfile = argfile[0]
     else:
         env = os.environ.get("GTIMELOG_FILE")
-        if env is not None:
+        if env is not None and env is not '':
             logfile = env
         else:
             home = os.path.expanduser("~")

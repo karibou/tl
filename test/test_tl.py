@@ -109,6 +109,13 @@ class TlTest(unittest.TestCase):
         line = self._get_last_log_line().strip()
         self.assertTrue(line.endswith('Arrived'))
 
+    def test_new_with_empty_env_variable(self):
+        '''testing only 'new' argument with empty GTIMELOG_FILE env variable'''
+        tl.Logfile = tl.set_logfile()
+        tl.log_activity('new', 'Arrived')
+        line = self._get_last_log_line().strip()
+        self.assertTrue(line.endswith('Arrived'))
+
     def test_new_with_env_variable(self):
         '''testing only 'new' argument with GTIMELOG_FILE env variable'''
         with patch('os.environ.get', return_value=self.LogFile):
