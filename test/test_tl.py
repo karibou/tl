@@ -107,20 +107,22 @@ class TlTest(unittest.TestCase):
         logfile = tl.set_logfile(argfile)
         self.assertTrue(logfile, self.LogFile)
 
-    def test_new_with_empty_env_variable(self):
-        '''testing only 'new' argument with empty GTIMELOG_FILE env variable'''
-        tl.Logfile = tl.set_logfile()
-        tl.log_activity('new', 'Arrived')
-        line = self._get_last_log_line().strip()
-        self.assertTrue(line.endswith('Arrived'))
+    def test_logfile_with_empty_env_variable(self):
+        '''testing logfile definition with empty GTIMELOG_FILE env variable'''
+        os.environ.setdefault('GTIMELOG_FILE', '')
+        with patch('os.path.expanduser', return_value=self.workdir):
+            with patch('os.path.exists', return_value=True):
+                logfile = tl.set_logfile()
+        default_target = '%s/.local/share/gtimelog/timelog.txt' % self.workdir
+        self.assertEquals(logfile, default_target)
+        os.environ.pop('GTIMELOG_FILE')
 
-    def test_new_with_env_variable(self):
-        '''testing only 'new' argument with GTIMELOG_FILE env variable'''
-        with patch('os.environ.get', return_value=self.LogFile):
-            self.LogFile = tl.set_logfile()
-        tl.log_activity('new', 'Arrived')
-        line = self._get_last_log_line().strip()
-        self.assertTrue(line.endswith('Arrived'))
+    def test_logfile_with_env_variable(self):
+        '''testing logfile definition with GTIMELOG_FILE env variable'''
+        os.environ.setdefault('GTIMELOG_FILE', '%s' % self.LogFile)
+        logfile = tl.set_logfile()
+        self.assertEquals(logfile, self.LogFile)
+        os.environ.pop('GTIMELOG_FILE')
 
     def test_ua_entry(self):
         '''testing a UA entry'''
