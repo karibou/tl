@@ -89,8 +89,7 @@ class TlTest(unittest.TestCase):
         newlogfile = os.path.join(self.workdir, 'newtimelog.txt')
         self.assertFalse(os.path.exists(newlogfile),
                          '%s already exists' % newlogfile)
-        os.environ.setdefault('GTIMELOG_FILE', '%s' % newlogfile)
-        tl.set_logfile()
+        argfile = [newlogfile]
         tl.set_logfile(argfile)
         self.assertTrue(os.path.exists(newlogfile),
                         '%s not created' % newlogfile)
