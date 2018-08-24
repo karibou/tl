@@ -3,7 +3,7 @@
 import datetime
 import argparse
 import os
-from gtimelog.timelog import TimeWindow, format_duration_short, as_minutes
+from gtimelog.timelog import TimeLog, format_duration_short, as_minutes
 
 virtual_midnight = datetime.time(2, 0)
 
@@ -62,7 +62,8 @@ def main():
         UserId = set_userid()
 
     (week_first, week_last) = get_time()
-    log_entries = TimeWindow(LogFile, week_first, week_last, virtual_midnight)
+    Log = TimeLog(LogFile, virtual_midnight)
+    log_entries = Log.window_for(week_first, week_last)
     total_work, _ = log_entries.totals()
     entries, totals = log_entries.categorized_work_entries()
 
