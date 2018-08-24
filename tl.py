@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 # Add a new task to the gtimelog log file.
 # Propose a list of task if only the category is supplied
 #
