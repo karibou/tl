@@ -24,6 +24,7 @@ Categories = {
     'pers': 'Personal management',
     'pto': 'Paid Timeout',
     'cp': 'Compute Team',
+    'dev': 'Non Compute development',
     'dr': 'Compute Doctor',
     'self': 'Self Training',
     'help': 'Help Out La Maison',
