@@ -16,29 +16,22 @@ import re
 import sys
 import datetime
 from os.path import expanduser
-from gtimelog.timelog import TimeWindow
+from gtimelog.timelog import TimeLog
 virtual_midnight = datetime.time(2, 0)
 
 LogFile = '%s/.local/share/gtimelog/timelog.txt' % expanduser("~")
 
 Categories = {
-    'ua': 'L3 / L3 support',
-    'lp': 'Launchpad & Public',
     'train': 'Mentoring / Edu / Training',
     'meet': 'Meetings',
-    'seg': 'SEG related activities',
-    'charm': 'Charm Devel',
     'doc': 'Documentation',
-    'kb': 'Knowledge base Work',
-    'z': 'Mainframe related',
-    'ib': 'Mellanox related',
-    'svvp': 'SVVP/Virtio dev',
-    'qe': 'QE',
-    'fan': 'Fan development',
-    'is': 'IS bug work',
     'pers': 'Personal management',
-    'comm': 'Community Involvment',
     'pto': 'Paid Timeout',
+    'cp': 'Compute Team',
+    'dev': 'Non Compute development',
+    'dr': 'Compute Doctor',
+    'self': 'Self Training',
+    'help': 'Help Out La Maison',
     }
 
 ListLimit = 10
@@ -137,7 +130,8 @@ def task_summary(category, task=None):
     total_delta = datetime.timedelta()
     today = datetime.datetime.today()
     epoch = datetime.datetime(1970, 10, 1)
-    log_entries = TimeWindow(LogFile, epoch, today, virtual_midnight)
+    Log = TimeLog(LogFile, virtual_midnight)
+    log_entries = Log.window_for(epoch, today)
     entries, _ = log_entries.categorized_work_entries()
 
     for (_, entry, entry_time) in entries[Categories[category] + ' ']:
