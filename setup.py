@@ -9,7 +9,7 @@ setup(name='tl',
       author_email='louis.bouchard@ubuntu.com',
       url='https://github.com/karibou/tl',
       license="GPLv2+",
-      scripts=['rep_tl.py', 'tl.py', 'tl_sum.py', 'weekly_tl.py'],
+      scripts=['rep_tl.py', 'tl.py', 'tl_sum.py', 'weekly_tl.py', 'daily_tl.py'],
       )
 
 
