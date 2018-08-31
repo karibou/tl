@@ -35,14 +35,17 @@ def main():
     parser.add_argument('-u', '--user', nargs=1, metavar='USER',
                         help='User Identification to be used for report')
     parser.add_argument('-t', '--time',
-                        help='Print weekly report with spent time',
+                        help='Print daily report with spent time',
                         action='store_false')
     parser.add_argument('-H', '--header',
                         help='Print category headers',
                         action='store_true')
     parser.add_argument('-m', '--minutes',
-                        help='Print weekly report with spent time in minutes',
+                        help='Print daily report with spent time in minutes',
                         action='store_true')
+    parser.add_argument('-b', '--back',
+                        help='Print daily report back # of days',
+                        metavar='BACK', type=int)
     args = parser.parse_args()
 
     if args.logfile is not None:
@@ -57,7 +60,9 @@ def main():
 
     day_start = datetime.datetime.today().replace(hour=0, minute=0, second=0,
                                                   microsecond=0)
-    day_end = datetime.datetime.today().replace(hour=23, minute=59, second=59,
+    if args.back:
+        day_start = day_start - datetime.timedelta(days=args.back)
+    day_end = day_start.replace(hour=23, minute=59, second=59,
                                                 microsecond=999)
     Log = TimeLog(LogFile, virtual_midnight)
     log_entries = Log.window_for(day_start, day_end)
