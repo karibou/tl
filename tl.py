@@ -17,23 +17,24 @@ import sys
 import time
 import os
 
-Categories = {
-    'train': 'Mentoring / Edu / Training',
-    'meet': 'Meetings',
-    'doc': 'Documentation',
-    'pers': 'Personal management',
-    'pto': 'Paid Timeout',
-    'cp': 'Compute Team',
-    'dev': 'Non Compute development',
-    'dr': 'Compute Doctor',
-    'self': 'Self Training',
-    'help': 'Help Out La Maison',
-    }
-
-ListLimit = 10
+# Categories = {
+    # 'train': 'Mentoring / Edu / Training',
+    # 'meet': 'Meetings',
+    # 'doc': 'Documentation',
+    # 'pers': 'Personal management',
+    # 'pto': 'Paid Timeout',
+    # 'cp': 'Compute Team',
+    # 'dev': 'Non Compute development',
+    # 'dr': 'Compute Doctor',
+    # 'self': 'Self Training',
+    # 'help': 'Help Out La Maison',
+    # }
 
 
 def import_file(import_file):
+    """
+    Import existing task list
+    """
     if not os.path.dirname(import_file):
         import_file = os.curdir + '/' + import_file
     if os.path.exists(import_file):
@@ -44,6 +45,9 @@ def import_file(import_file):
 
 
 def create_logfile(newfile):
+    """
+    Create a new logfile
+    """
     if not os.path.exists(newfile):
         os.makedirs(os.path.dirname(newfile), exist_ok=True)
         with open(newfile, 'w') as newfile:
@@ -51,6 +55,9 @@ def create_logfile(newfile):
 
 
 def set_logfile(argfile=None):
+    """
+    Set logfile accorting to env variable or option
+    """
     if argfile is not None:
         logfile = argfile[0]
     else:
@@ -64,115 +71,152 @@ def set_logfile(argfile=None):
     return logfile
 
 
-def print_categories():
-    for k in sorted(Categories):
-        print(k)
+class tasklog():
+    def __init__(self):
+        self.cases = []
+        self.LogFile = ''
+        self.categories = {}
+        self.ListLimit = 10
+
+    def get_categories(self):
+        """
+        Define the valid categories from entries in the log file
+        """
+        regex = re.compile(r'new_?category.*[**]\n')
+        self.categories = {}
+        for line in self.cases:
+            if regex.findall(line):
+                case = line.split(' ')
+                self.categories[case[3]] = ' '.join(case[4:]).rstrip('**\n')
 
 
-def print_tasks(category, **kwargs):
-    tasks = get_tasks(category)
-    if "escape" in kwargs and kwargs["escape"]:
-        new_tasks = [t.replace(" ", "\\ ") for t in tasks]
-        tasks = new_tasks
-    print("\n".join(tasks))
-
-
-def show_help():
-    try:
-        # python3-prettytable will be used if installed
-        import prettytable
-        categories = prettytable.PrettyTable(["Key", "Description"],
-                                             sortby="Key", padding_width=1)
-        categories.align["Key"] = "l"
-        categories.align["Description"] = "l"
-        categories.padding_width = 1
-        for keys, description in Categories.items():
-            categories.add_row([keys, description])
-        print(categories)
-    except:
-        for keys, description in Categories.items():
-            print("%s : %s" % (keys, description))
-
-
-def get_tasks(category):
-    cases = []
-    regex = re.compile(r'{}'.format(Categories[category]))
-    with open(LogFile, 'r') as timelog:
-        all_cases = timelog.readlines()
-    all_cases.reverse()
-    for line in all_cases:
-        if regex.findall(line):
-            case = regex.split(line)[-1].strip()
-            if case.lstrip(": ") not in cases:
-                cases.append(case.lstrip(": "))
-    return cases
-
-
-def select_tasks(category):
-    cases = get_tasks(category)
-    mytask = 0
-    for I in cases:
-        if (cases.index(I) + 1) % ListLimit:
-            print("{}) {}".format(cases.index(I) + 1, I))
-        else:
-            # account for modulo = 0 item
-            print("{}) {}".format(cases.index(I) + 1, I))
-            if cases.index(I) + 1 < len(cases):
-                try:
-                    mytask = input("Select task (0 to exit,<CR> to continue): "
-                                   )
-                    if mytask == '0':
-                        return(None, None)
-                    if mytask == '' or not mytask.isdecimal():
-                        continue
-                    else:
-                        mytask = int(mytask)
-                        break
-
-                except KeyboardInterrupt:
-                    print("Terminated\n")
-                    sys.exit(1)
-
-    if not mytask:
+    def print_categories(self, Raw=None):
+        """
+        Print the list of categories
+        """
+        if Raw:
+            for k in sorted(self.categories):
+                print(k)
+            return
         try:
-            mytask = input("Select task (0 or <CR> to exit): ")
-            if mytask == '0' or mytask == '' or not mytask.isdecimal():
-                return(None, None)
+            # python3-prettytable will be used if installed
+            import prettytable
+            cat_list = prettytable.PrettyTable(["Key", "Description"],
+                                                 sortby="Key", padding_width=1)
+            cat_list.align["Key"] = "l"
+            cat_list.align["Description"] = "l"
+            cat_list.padding_width = 1
+            for keys, description in self.categories.items():
+                cat_list.add_row([keys, description])
+            print(cat_list)
+        except:
+            for keys, description in self.categories.items():
+                print("%s : %s" % (keys, description))
+
+    def print_tasks(self, category, **kwargs):
+        """
+        Print the list of tasks for a given category
+        """
+        tasks = self.get_tasks_by_category(category)
+        if "escape" in kwargs and kwargs["escape"]:
+            new_tasks = [t.replace(" ", "\\ ") for t in tasks]
+            tasks = new_tasks
+        print("\n".join(tasks))
+
+
+    def get_all_cases(self):
+        """
+        Get all cases from the logfile
+        """
+        with open(self.logfile, 'r') as timelog:
+            all_cases = timelog.readlines()
+        all_cases.reverse()
+        self.cases = all_cases
+
+    def get_tasks_by_category(self, category):
+        """
+        Get all tasks for a given category
+        """
+        regex = re.compile(r'{} '.format(self.categories[category]))
+        cat_cases = []
+        for line in self.cases:
+            if regex.findall(line):
+                case = regex.split(line)[-1].strip()
+                if case.lstrip(": ") not in cat_cases:
+                    cat_cases.append(case.lstrip(": "))
+        return cat_cases
+
+
+    def select_tasks(self, category):
+        """
+        Select existing tasks for a given category
+        """
+        task_cases = self.get_tasks_by_category(category)
+        mytask = 0
+        for I in task_cases:
+            if (task_cases.index(I) + 1) % self.ListLimit:
+                print("{}) {}".format(task_cases.index(I) + 1, I))
             else:
-                mytask = int(mytask)
+                # account for modulo = 0 item
+                print("{}) {}".format(task_cases.index(I) + 1, I))
+                if task_cases.index(I) + 1 < len(task_cases):
+                    try:
+                        mytask = input("Select task (0 to exit,<CR> to continue): "
+                                       )
+                        if mytask == '0':
+                            return(None, None)
+                        if mytask == '' or not mytask.isdecimal():
+                            continue
+                        else:
+                            mytask = int(mytask)
+                            break
 
-        except KeyboardInterrupt:
-            print("Terminated\n")
-            sys.exit(1)
+                    except KeyboardInterrupt:
+                        print("Terminated\n")
+                        sys.exit(1)
 
-    if mytask > 0 and mytask <= len(cases):
-        return(category, cases[mytask - 1])
-    else:
-        print("Invalid task number")
-        return(None, None)
+        if not mytask:
+            try:
+                mytask = input("Select task (0 or <CR> to exit): ")
+                if mytask == '0' or mytask == '' or not mytask.isdecimal():
+                    return(None, None)
+                else:
+                    mytask = int(mytask)
 
+            except KeyboardInterrupt:
+                print("Terminated\n")
+                sys.exit(1)
 
-def log_activity(category, task=None):
-
-    now = time.localtime()
-    today = '{:04d}-{:02d}-{:02d} {:02d}:{:02d}'.format(
-        now.tm_year, now.tm_mon, now.tm_mday,
-        now.tm_hour, now.tm_min)
-
-    with open(LogFile, 'a') as timelog:
-        if task is None:
-            timelog.write('{}: {}\n'.format(today, category))
+        if mytask > 0 and mytask <= len(task_cases):
+            return(category, task_cases[mytask - 1])
         else:
-            if category in Categories.keys():
-                timelog.write('{}: {} : {}\n'.format(
-                    today, Categories[category], task))
+            print("Invalid task number")
+            return(None, None)
+
+
+    def log_activity(self, category, task=None):
+        """
+        Enter a new task for a category
+        """
+        now = time.localtime()
+        today = '{:04d}-{:02d}-{:02d} {:02d}:{:02d}'.format(
+            now.tm_year, now.tm_mon, now.tm_mday,
+            now.tm_hour, now.tm_min)
+
+        with open(self.logfile, 'a') as timelog:
+            if task is None:
+                timelog.write('{}: {}\n'.format(today, category))
             else:
-                timelog.write('{}: {} : {}\n'.format(
-                    today, category, task))
-    return 0
+                if category in self.categories.keys():
+                    timelog.write('{}: {} : {}\n'.format(
+                        today, self.categories[category], task))
+                else:
+                    timelog.write('{}: {} : {}\n'.format(
+                        today, category, task))
+        return 0
 
 
-if __name__ == '__main__':
+def main():
 
     parser = argparse.ArgumentParser()
     parser.add_argument('task', nargs='*',
@@ -191,20 +235,23 @@ if __name__ == '__main__':
                         help='Path to a gtimelog file to import')
     args = parser.parse_args()
 
+    Tl = tasklog()
+
     if args.logfile is not None:
-        LogFile = set_logfile(args.logfile)
+        Tl.logfile = set_logfile(args.logfile)
     else:
-        LogFile = set_logfile()
+        Tl.logfile = set_logfile()
+
+    Tl.get_all_cases()
+
+    Tl.get_categories()
 
     if args.list_categories:
-        if args.raw:
-            print_categories()
-        else:
-            show_help()
+        Tl.print_categories(args.raw)
         sys.exit(0)
 
     if args.list_tasks:
-        print_tasks(args.list_tasks[0], escape=args.raw)
+        Tl.print_tasks(args.list_tasks[0], escape=args.raw)
         sys.exit(0)
 
     if args.importfile:
@@ -212,19 +259,29 @@ if __name__ == '__main__':
         sys.exit(0)
 
     if args.task:
-        if len(args.task) == 1:
+        import pdb
+        pdb.set_trace()
+        if len(args.task) == 1 or args.task[-1].endswith('**'):
             if args.task[0] == '?':
                 show_help()
                 sys.exit(0)
             elif args.task[0] == 'new':
-                log_activity('new', 'Arrived')
-            elif args.task[0] in Categories:
-                (category, task) = select_tasks(args.task[0])
+                Tl.log_activity('new', 'Arrived')
+            elif args.task[0] in Tl.categories:
+                (category, task) = Tl.select_tasks(args.task[0])
                 if category:
-                    log_activity(category, task)
+                    Tl.log_activity(category, task)
             else:
-                log_activity(args.task[0])
+                Tl.log_activity(args.task[0])
         else:
-            log_activity(args.task[0], " ".join(args.task[2:]))
+            if args.task[0].rstrip(':') in [ 'newcategory', 'new_category' ]:
+                Tl.log_activity(args.task[0], " ".join(args.task[1:]))
+            else:
+                Tl.log_activity(args.task[0], " ".join(args.task[2:]))
     else:
         parser.print_help()
+
+
+if __name__ == '__main__':
+    main()
+

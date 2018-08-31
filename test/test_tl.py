@@ -14,6 +14,23 @@ class TlTest(unittest.TestCase):
         self.LogFile = os.path.join(self.workdir, 'timelog.txt')
         # Prepare timelog file with existing tasks
         with open(self.LogFile, 'w') as timelog:
+            timelog.write("2015-03-13 13:21: new_category: charm Charm Devel**\n")
+            timelog.write("2015-03-13 13:21: new_category: comm  Community Involvment**\n")
+            timelog.write("2015-03-13 13:21: new_category: doc Documentation**\n")
+            timelog.write("2015-03-13 13:21: new_category: fan Fan development**\n")
+            timelog.write("2015-03-13 13:21: new_category: ib Mellanox related**\n")
+            timelog.write("2015-03-13 13:21: new_category: is IS bug work**\n")
+            timelog.write("2015-03-13 13:21: new_category: kb Knowledge base Work**\n")
+            timelog.write("2015-03-13 13:21: new_category: lp Launchpad & Public**\n")
+            timelog.write("2015-03-13 13:21: newcategory: meet Meetings**\n")
+            timelog.write("2015-03-13 13:21: newcategory: pers Personal management**\n")
+            timelog.write("2015-03-13 13:21: newcategory: pto Paid Timeout**\n")
+            timelog.write("2015-03-13 13:21: newcategory: qe QE**\n")
+            timelog.write("2015-03-13 13:21: newcategory: seg SEG related activities**\n")
+            timelog.write("2015-03-13 13:21: newcategory: svvp SVVP/Virtio dev**\n")
+            timelog.write("2015-03-13 13:21: newcategory: train Mentoring / Edu / Training**\n")
+            timelog.write("2015-03-13 13:21: newcategory: ua L3 / L3 support**\n")
+            timelog.write("2015-03-13 13:21: newcategory: z Mainframe related**\n")
             timelog.write("2015-03-13 13:21: lunch** :\n")
             timelog.write("2015-03-13 16:34: Launchpad & Public :  lp1415880\n"
                           )
@@ -198,7 +215,9 @@ class TlTest(unittest.TestCase):
     def test_select_tasks_out_of_range(self):
         '''testing category only and giving out of range answer'''
         with patch('builtins.input', return_value='3'):
-            tl.select_tasks('ua')
+            cases = tl.get_all_cases(self.LogFile)
+            tl.Categories = tl.get_categories(cases)
+            tl.select_tasks('ua', cases)
             output = sys.stdout.getvalue().strip()
             self.assertEqual(output, """1) SF801-kdump
 2) SF7-openafs
@@ -376,7 +395,8 @@ ua
 z""")
 
     def test_print_tasks_meet(self):
-        tl.print_tasks("meet")
+        all_cases = tl.get_all_cases(self.LogFile)
+        tl.print_tasks("meet", all_cases)
         output = sys.stdout.getvalue().strip()
         self.assertEqual(output, """mom
 kernel
@@ -427,6 +447,22 @@ python""")
                    return_value='%s/mylogenv' % self.workdir):
             Log = tl.set_logfile()
             self.assertEqual(Log, '%s/mylogenv' % self.workdir)
+
+    def test_get_categories(self):
+        cases = tl.get_all_cases(self.LogFile)
+        cat = tl.get_categories(cases)
+        self.assertEqual(list(cat.keys()), ['z', 'ua', 'train', 'svvp', 'seg', 'qe',
+                               'pto', 'pers', 'meet', 'lp', 'kb', 'is',
+                               'ib', 'fan', 'doc', 'comm', 'charm'])
+
+    def test_get_categories_not_a_cat(self):
+        tl.LogFile = self.LogFile
+        tl.log_activity('ua', 'This is not a new_category but a normal entry')
+        cases = tl.get_all_cases(self.LogFile)
+        cat = tl.get_categories(cases)
+        self.assertEqual(list(cat.keys()), ['z', 'ua', 'train', 'svvp', 'seg', 'qe',
+                               'pto', 'pers', 'meet', 'lp', 'kb', 'is',
+                               'ib', 'fan', 'doc', 'comm', 'charm'])
 
     def _get_last_log_line(self):
 
