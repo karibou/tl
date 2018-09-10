@@ -259,8 +259,6 @@ def main():
         sys.exit(0)
 
     if args.task:
-        import pdb
-        pdb.set_trace()
         if len(args.task) == 1 or args.task[-1].endswith('**'):
             if args.task[0] == '?':
                 show_help()
