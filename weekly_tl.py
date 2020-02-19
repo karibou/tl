@@ -49,6 +49,9 @@ def main():
     parser.add_argument('-m', '--minutes',
                         help='Print weekly report with spent time in minutes',
                         action='store_true')
+    parser.add_argument('-d', '--days',
+                        help='Print weekly report with spent time in days',
+                        action='store_true')
     args = parser.parse_args()
 
     if args.logfile is not None:
@@ -93,14 +96,17 @@ def main():
                 entry = entry[:1].upper() + entry[1:]
                 if args.no_time:
                     print(u"  %-61s  " % entry)
+                elif args.minutes:
+                    print(u"  %-61s  %+5s %+4s" %
+                        (entry, format_duration_short(duration),
+                        as_minutes(duration)))
+                elif args.days:
+                    print(u"  %-61s  %+5s %.1f" %
+                        (entry, format_duration_short(duration),
+                        as_minutes(duration)/480))
                 else:
-                    if args.minutes:
-                        print(u"  %-61s  %+5s %+4s" %
-                            (entry, format_duration_short(duration),
-                            as_minutes(duration)))
-                    else:
-                        print(u"  %-61s  %+5s" %
-                            (entry, format_duration_short(duration)))
+                    print(u"  %-61s  %+5s" %
+                        (entry, format_duration_short(duration)))
 
             if args.no_time:
                 print("")
@@ -109,7 +115,10 @@ def main():
                     print('-' * 75)
                     print(u"%+70s %4s" % (format_duration_short(totals[cat]),
                                         as_minutes(totals[cat])))
-                else:
+                elif args.days:
+                    print('-' * 75)
+                    print(u"%+70s %.1f" % (format_duration_short(totals[cat]),
+                                        as_minutes(totals[cat])/480))
                     print('-' * 70)
                     print(u"%+70s" % (format_duration_short(totals[cat])))
         print("Total work done : %s" % format_duration_short(total_work))
