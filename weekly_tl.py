@@ -28,9 +28,12 @@ def set_userid(user=None):
     return '<replace by your user identification>'
 
 
-def get_time():
+def get_time(back):
     today = datetime.datetime.today()
     today = today.replace(hour=0, minute=0, second=0, microsecond=0)
+    if back:
+        back = int(back[0])
+        today = today - datetime.timedelta(weeks=back)
     week_first = today - datetime.timedelta(days=today.weekday())
     week_last = week_first + datetime.timedelta(days=6)
     week_last = week_last.replace(hour=23, minute=59, second=59)
@@ -52,6 +55,9 @@ def main():
     parser.add_argument('-d', '--days',
                         help='Print weekly report with spent time in days',
                         action='store_true')
+    parser.add_argument('-b', '--back',
+                        help='Print weekly report back # of weeks',
+                        nargs=1)
     args = parser.parse_args()
 
     if args.logfile is not None:
@@ -64,7 +70,7 @@ def main():
     else:
         UserId = set_userid()
 
-    (week_first, week_last) = get_time()
+    (week_first, week_last) = get_time(args.back)
     Log = TimeLog(LogFile, virtual_midnight)
     log_entries = Log.window_for(week_first, week_last)
     total_work, _ = log_entries.totals()
