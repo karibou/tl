@@ -103,30 +103,32 @@ def main():
                 if args.no_time:
                     print(u"  %-61s  " % entry)
                 elif args.minutes:
-                    print(u"  %-61s  %+5s %+4s" %
+                    print(u"  %-85s  %+5s %+4s" %
                         (entry, format_duration_short(duration),
                         as_minutes(duration)))
                 elif args.days:
-                    print(u"  %-61s  %+5s %.1f" %
+                    print(u"  %-85s  %+5s %.1f" %
                         (entry, format_duration_short(duration),
                         as_minutes(duration)/480))
                 else:
-                    print(u"  %-61s  %+5s" %
+                    print(u"  %-85s  %+5s" %
                         (entry, format_duration_short(duration)))
 
             if args.no_time:
                 print("")
             else:
                 if args.minutes:
-                    print('-' * 75)
-                    print(u"%+70s %4s" % (format_duration_short(totals[cat]),
+                    print('-' * 100)
+                    print(u"%+94s %4s" % (format_duration_short(totals[cat]),
                                         as_minutes(totals[cat])))
                 elif args.days:
-                    print('-' * 75)
-                    print(u"%+70s %.1f" % (format_duration_short(totals[cat]),
+                    print('-' * 98)
+                    print(u"%+94s %.1f" % (format_duration_short(totals[cat]),
                                         as_minutes(totals[cat])/480))
-                    print('-' * 70)
-                    print(u"%+70s" % (format_duration_short(totals[cat])))
+                else:
+                    print('-' * 94)
+                    print(u"%+94s" % (format_duration_short(totals[cat])))
+                    
         print("Total work done : %s" % format_duration_short(total_work))
 
 
